@@ -5,9 +5,8 @@ import Theme from "./theme";
 
 const NavBar = () => {
   return (
-    <HStack>
+    <HStack justifyContent="space-between" padding="10px">
       <Image src={logo} boxSize={"60px"} alt="Logo" />
-      <Text>NavBar</Text>
       <Theme />
     </HStack>
   );
