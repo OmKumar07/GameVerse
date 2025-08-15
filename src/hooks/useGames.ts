@@ -1,5 +1,5 @@
 import apiClient from "@/services/api-client";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export interface Platform {
   id: number;
@@ -17,6 +17,8 @@ export interface Game {
 
 interface FetchGamesResponse {
   count: number;
+  next: string | null;
+  previous: string | null;
   results: Game[];
 }
 
@@ -28,34 +30,60 @@ interface GameQuery {
 }
 
 const useGames = (gameQuery: GameQuery) => {
-  const { data, error, isLoading } = useQuery<FetchGamesResponse, Error>({
+  const fetchGames = async ({ pageParam = 1 }: { pageParam?: number }) => {
+    const params: any = {
+      page: pageParam,
+      page_size: 20,
+    };
+
+    if (gameQuery.genreId) {
+      params.genres = gameQuery.genreId;
+    }
+
+    if (gameQuery.platformId) {
+      params.parent_platforms = gameQuery.platformId;
+    }
+
+    if (gameQuery.sortOrder) {
+      params.ordering = gameQuery.sortOrder;
+    }
+
+    if (gameQuery.searchText) {
+      params.search = gameQuery.searchText;
+    }
+
+    const response = await apiClient.get<FetchGamesResponse>("/games", {
+      params,
+    });
+    return response.data;
+  };
+
+  const {
+    data,
+    error,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
     queryKey: ["games", gameQuery],
-    queryFn: () => {
-      const params: any = {};
-
-      if (gameQuery.genreId) {
-        params.genres = gameQuery.genreId;
-      }
-
-      if (gameQuery.platformId) {
-        params.parent_platforms = gameQuery.platformId;
-      }
-
-      if (gameQuery.sortOrder) {
-        params.ordering = gameQuery.sortOrder;
-      }
-
-      if (gameQuery.searchText) {
-        params.search = gameQuery.searchText;
-      }
-
-      return apiClient
-        .get<FetchGamesResponse>("/games", { params })
-        .then((res) => res.data);
+    queryFn: fetchGames,
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.next ? pages.length + 1 : undefined;
     },
+    initialPageParam: 1,
   });
 
-  return { games: data?.results || [], error: error?.message || "", isLoading };
+  const games = data?.pages.flatMap((page) => page.results) || [];
+
+  return {
+    games,
+    error: error?.message || "",
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  };
 };
 
 export default useGames;

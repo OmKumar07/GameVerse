@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 
 interface Props {
-  gameCount: number;
+  gameCount?: number;
   genreName?: string;
   platformName?: string;
   isLoading?: boolean;
@@ -27,7 +27,7 @@ const GameHeading = ({
   if (isLoading) {
     return (
       <Box mb={6}>
-        <Skeleton height="48px" width="400px" borderRadius="md" mb={2} />
+        <Skeleton height="48px" width="300px" borderRadius="md" mb={2} />
         <Skeleton height="24px" width="200px" borderRadius="md" />
       </Box>
     );
@@ -47,7 +47,7 @@ const GameHeading = ({
           color={textColor}
           lineHeight="shorter"
         >
-          {gameCount.toLocaleString()} Games
+          {filters.length > 0 ? `${filters.join(" ")} Games` : "Discover Games"}
         </Heading>
 
         {filters.length > 0 && (
@@ -69,9 +69,13 @@ const GameHeading = ({
         )}
       </HStack>
 
-      {filters.length > 0 && (
+      {filters.length > 0 ? (
         <Text fontSize="lg" color="gray.500" mt={2} fontWeight="medium">
           Filtered by {filters.join(" • ")} 🎮
+        </Text>
+      ) : (
+        <Text fontSize="lg" color="gray.500" mt={2} fontWeight="medium">
+          Explore the latest and greatest games 🎮
         </Text>
       )}
     </Box>

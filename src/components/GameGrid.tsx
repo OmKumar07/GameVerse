@@ -1,6 +1,13 @@
 import useGames from "@/hooks/useGames";
-import { Box, SimpleGrid, Spinner, Text, HStack } from "@chakra-ui/react";
-import React from "react";
+import {
+  Box,
+  SimpleGrid,
+  Spinner,
+  Text,
+  HStack,
+  Button,
+} from "@chakra-ui/react";
+import React, { useEffect } from "react";
 import GameCard from "./GameCard";
 import GameCardSkeleton from "./GameCardSkeleton";
 import GameHeading from "./GameHeading";
@@ -33,15 +40,39 @@ const GameGrid = ({
     searchText,
   };
 
-  const { games, error, isLoading } = useGames(gameQuery);
+  const {
+    games,
+    error,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useGames(gameQuery);
+
   const skeletons = [1, 2, 3, 4, 5, 6];
+
+  // Infinite scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 1000 // Load more when 1000px from bottom
+      ) {
+        if (hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (
     <Box padding={{ base: "20px", md: "32px" }} maxW="1400px" mx="auto">
       <GameHeading
-        gameCount={games.length}
         genreName={selectedGenre?.name}
         platformName={selectedPlatform?.name}
         isLoading={isLoading}
@@ -55,12 +86,6 @@ const GameGrid = ({
         <SortSelector sortOrder={sortOrder} onSelectSortOrder={onSortSelect} />
       </HStack>
 
-      {isLoading && (
-        <Box padding="10">
-          <Spinner size="xl" />
-        </Box>
-      )}
-
       <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} gap={6}>
         {isLoading &&
           skeletons.map((skeleton: number) => (
@@ -70,6 +95,27 @@ const GameGrid = ({
           <GameCard key={game.id} game={game} />
         ))}
       </SimpleGrid>
+
+      {/* Loading more indicator */}
+      {isFetchingNextPage && (
+        <Box display="flex" justifyContent="center" mt={8} mb={4}>
+          <Spinner size="lg" color="purple.500" />
+        </Box>
+      )}
+
+      {/* Load more button as fallback */}
+      {hasNextPage && !isFetchingNextPage && (
+        <Box display="flex" justifyContent="center" mt={8} mb={4}>
+          <Button
+            onClick={() => fetchNextPage()}
+            colorScheme="purple"
+            variant="outline"
+            size="lg"
+          >
+            Load More Games
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
