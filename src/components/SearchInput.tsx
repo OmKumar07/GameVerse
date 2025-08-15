@@ -1,4 +1,4 @@
-import { Input, InputGroup, Icon, Box } from "@chakra-ui/react";
+import { Input, Icon, Box, useColorModeValue } from "@chakra-ui/react";
 import { BsSearch } from "react-icons/bs";
 import { useRef } from "react";
 
@@ -8,6 +8,10 @@ interface Props {
 
 const SearchInput = ({ onSearch }: Props) => {
   const ref = useRef<HTMLInputElement>(null);
+  const bgColor = useColorModeValue("gray.50", "gray.700");
+  const focusBgColor = useColorModeValue("white", "gray.600");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const focusBorderColor = useColorModeValue("purple.400", "purple.300");
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,18 +25,31 @@ const SearchInput = ({ onSearch }: Props) => {
       <Box position="relative">
         <Input
           ref={ref}
-          borderRadius={20}
-          placeholder="Search games..."
-          variant="outline"
-          paddingLeft={10}
+          borderRadius="xl"
+          placeholder="Search for games..."
+          variant="filled"
+          bg={bgColor}
+          _focus={{
+            bg: focusBgColor,
+            borderColor: focusBorderColor,
+            boxShadow: `0 0 0 1px ${focusBorderColor}`,
+          }}
+          _hover={{
+            bg: focusBgColor,
+          }}
+          paddingLeft={12}
+          fontSize="md"
+          height="44px"
+          transition="all 0.2s"
         />
         <Icon
           as={BsSearch}
-          color="gray.500"
+          color="gray.400"
           position="absolute"
-          left={3}
+          left={4}
           top="50%"
           transform="translateY(-50%)"
+          zIndex={2}
         />
       </Box>
     </form>

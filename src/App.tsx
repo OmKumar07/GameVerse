@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Show } from "@chakra-ui/react";
+import { Box, Grid, GridItem, useColorModeValue } from "@chakra-ui/react";
 import { useState } from "react";
 import NavBar from "./components/NavBar";
 import GameGrid from "./components/GameGrid";
@@ -12,41 +12,60 @@ function App() {
   const [searchText, setSearchText] = useState("");
   const [sortOrder, setSortOrder] = useState("");
 
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+  const sidebarBg = useColorModeValue("white", "gray.800");
+
   return (
-    <Grid
-      templateAreas={{
-        base: `"nav" "main"`,
-        lg: `"nav nav" "aside main"`,
-      }}
-      templateColumns={{
-        base: "1fr",
-        lg: "200px 1fr",
-      }}
-      bg="gray.800"
-      color="white"
-    >
-      <GridItem area="nav">
-        <NavBar onSearch={setSearchText} />
-      </GridItem>
-      <Box display={{ base: "none", lg: "block" }}>
-        <GridItem area="aside" paddingX={5}>
-          <GenreList
+    <Box minH="100vh" bg={bgColor}>
+      <Grid
+        templateAreas={{
+          base: `"nav" "main"`,
+          lg: `"nav nav" "aside main"`,
+        }}
+        templateColumns={{
+          base: "1fr",
+          lg: "280px 1fr",
+        }}
+        templateRows={{
+          base: "auto 1fr",
+          lg: "auto 1fr",
+        }}
+      >
+        <GridItem area="nav">
+          <NavBar onSearch={setSearchText} />
+        </GridItem>
+
+        <GridItem
+          area="aside"
+          display={{ base: "none", lg: "block" }}
+          bg={sidebarBg}
+          borderRight="1px"
+          borderColor={useColorModeValue("gray.200", "gray.700")}
+          overflowY="auto"
+          maxH="calc(100vh - 82px)"
+          position="sticky"
+          top="82px"
+        >
+          <Box p={6}>
+            <GenreList
+              selectedGenre={selectedGenre}
+              onSelectGenre={(genre) => setSelectedGenre(genre)}
+            />
+          </Box>
+        </GridItem>
+
+        <GridItem area="main">
+          <GameGrid
             selectedGenre={selectedGenre}
-            onSelectGenre={(genre) => setSelectedGenre(genre)}
+            selectedPlatform={selectedPlatform}
+            searchText={searchText}
+            sortOrder={sortOrder}
+            onSelectPlatform={setSelectedPlatform}
+            onSortSelect={setSortOrder}
           />
         </GridItem>
-      </Box>
-      <GridItem area="main">
-        <GameGrid
-          selectedGenre={selectedGenre}
-          selectedPlatform={selectedPlatform}
-          searchText={searchText}
-          sortOrder={sortOrder}
-          onSelectPlatform={setSelectedPlatform}
-          onSortSelect={setSortOrder}
-        />
-      </GridItem>
-    </Grid>
+      </Grid>
+    </Box>
   );
 }
 
