@@ -1,4 +1,4 @@
-import { ColorModeButton } from "@/components/ui/color-mode";
+import ColorModeButton from "./ColorModeSwitch";
 
 const Demo = () => {
   return <ColorModeButton />;

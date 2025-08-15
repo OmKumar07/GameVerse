@@ -1,0 +1,41 @@
+.sort-selector {
+  padding: 8px;
+  border-radius: 6px;
+  background-color: inherit;
+  color: inherit;
+  border: 1px solid;
+  border-color: inherit;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sort-selector:hover {
+  opacity: 0.8;
+}
+
+.sort-selector:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.6);
+}
+
+.platform-selector {
+  padding: 8px;
+  border-radius: 6px;
+  background-color: inherit;
+  color: inherit;
+  border: 1px solid;
+  border-color: inherit;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.platform-selector:hover {
+  opacity: 0.8;
+}
+
+.platform-selector:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.6);
+}
