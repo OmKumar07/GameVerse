@@ -21,6 +21,7 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
   const hoverBg = useColorModeValue("gray.100", "gray.700");
   const selectedBg = useColorModeValue("purple.50", "purple.900");
   const selectedColor = useColorModeValue("purple.600", "purple.200");
+  const textColor = useColorModeValue("gray.700", "gray.200");
 
   if (error) return null;
   if (isLoading)
@@ -52,7 +53,7 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
           h="auto"
           borderRadius="lg"
           bg={!selectedGenre ? selectedBg : "transparent"}
-          color={!selectedGenre ? selectedColor : "inherit"}
+          color={!selectedGenre ? selectedColor : textColor}
           _hover={{ bg: !selectedGenre ? selectedBg : hoverBg }}
           onClick={() => onSelectGenre({} as Genre)}
           fontWeight={!selectedGenre ? "semibold" : "medium"}
@@ -86,7 +87,7 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
             h="auto"
             borderRadius="lg"
             bg={selectedGenre?.id === genre.id ? selectedBg : "transparent"}
-            color={selectedGenre?.id === genre.id ? selectedColor : "inherit"}
+            color={selectedGenre?.id === genre.id ? selectedColor : textColor}
             _hover={{
               bg: selectedGenre?.id === genre.id ? selectedBg : hoverBg,
             }}
