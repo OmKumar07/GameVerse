@@ -1,5 +1,15 @@
-import { Box, Select } from "@chakra-ui/react";
-import { ChangeEvent } from "react";
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+  Text,
+  useColorModeValue,
+  Icon,
+} from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { BsSortDown } from "react-icons/bs";
 
 interface Props {
   onSelectSortOrder: (sortOrder: string) => void;
@@ -9,43 +19,68 @@ interface Props {
 interface SortOption {
   value: string;
   label: string;
+  icon: string;
 }
 
 const SortSelector = ({ onSelectSortOrder, sortOrder }: Props) => {
+  const bgColor = useColorModeValue("white", "gray.700");
+  const hoverColor = useColorModeValue("gray.50", "gray.600");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+
   const sortOrders: SortOption[] = [
-    { value: "", label: "Relevance" },
-    { value: "-added", label: "Date added" },
-    { value: "name", label: "Name" },
-    { value: "-released", label: "Release date" },
-    { value: "-metacritic", label: "Popularity" },
-    { value: "-rating", label: "Average rating" },
+    { value: "", label: "Relevance", icon: "🎯" },
+    { value: "-added", label: "Date Added", icon: "📅" },
+    { value: "name", label: "Name", icon: "🔤" },
+    { value: "-released", label: "Release Date", icon: "🗓️" },
+    { value: "-metacritic", label: "Popularity", icon: "🔥" },
+    { value: "-rating", label: "Rating", icon: "⭐" },
   ];
 
-  const currentSortOrder = sortOrders.find(
-    (order) => order.value === sortOrder
-  );
-
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    onSelectSortOrder(e.target.value);
-  };
+  const currentSortOrder =
+    sortOrders.find((order) => order.value === sortOrder) || sortOrders[0];
 
   return (
-    <Box>
-      <select
-        value={sortOrder}
-        onChange={handleChange}
-        className="sort-selector"
-        title="Sort games"
-        aria-label="Sort games"
+    <Menu>
+      <MenuButton
+        as={Button}
+        rightIcon={<ChevronDownIcon />}
+        leftIcon={<Icon as={BsSortDown} />}
+        bg={bgColor}
+        border="1px"
+        borderColor={borderColor}
+        _hover={{ bg: hoverColor }}
+        _active={{ bg: hoverColor }}
+        borderRadius="lg"
+        height="44px"
+        minW="180px"
+        justifyContent="space-between"
+        textAlign="left"
+        fontWeight="normal"
       >
-        <option value="">Order by: Relevance</option>
+        <Text isTruncated>
+          {currentSortOrder.icon} {currentSortOrder.label}
+        </Text>
+      </MenuButton>
+      <MenuList
+        bg={bgColor}
+        border="1px"
+        borderColor={borderColor}
+        borderRadius="lg"
+        shadow="xl"
+      >
         {sortOrders.map((order) => (
-          <option key={order.value} value={order.value}>
-            {order.label} 📊
-          </option>
+          <MenuItem
+            key={order.value}
+            onClick={() => onSelectSortOrder(order.value)}
+            _hover={{ bg: hoverColor }}
+            fontWeight={sortOrder === order.value ? "bold" : "normal"}
+          >
+            <Text mr={3}>{order.icon}</Text>
+            {order.label}
+          </MenuItem>
         ))}
-      </select>
-    </Box>
+      </MenuList>
+    </Menu>
   );
 };
 

@@ -39,7 +39,7 @@ const GameGrid = ({
   if (error) return <Text color="red.500">{error}</Text>;
 
   return (
-    <Box padding="10px">
+    <Box padding={{ base: "20px", md: "32px" }} maxW="1400px" mx="auto">
       <GameHeading
         gameCount={games.length}
         genreName={selectedGenre?.name}
@@ -47,7 +47,7 @@ const GameGrid = ({
         isLoading={isLoading}
       />
 
-      <HStack gap={5} marginBottom={5}>
+      <HStack gap={4} marginBottom={8} flexWrap="wrap" align="center">
         <PlatformSelector
           selectedPlatform={selectedPlatform}
           onSelectPlatform={onSelectPlatform}
