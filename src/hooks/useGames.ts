@@ -1,36 +1,61 @@
 import apiClient from "@/services/api-client";
-import { CanceledError } from "axios";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+export interface Platform {
+  id: number;
+  name: string;
+  slug: string;
+}
 
 export interface Game {
   id: number;
   name: string;
   background_image: string;
+  parent_platforms: { platform: Platform }[];
+  metacritic: number;
 }
 
 interface FetchGamesResponse {
   count: number;
   results: Game[];
 }
-const useGames = () => {
-  const [games, setGames] = useState<Game[]>([]);
-  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const controller = new AbortController();
+interface GameQuery {
+  genreId?: number;
+  platformId?: number;
+  sortOrder?: string;
+  searchText?: string;
+}
 
-    apiClient
-      .get<FetchGamesResponse>("/games", { signal: controller.signal })
-      .then((res) => setGames(res.data.results))
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-        setError(err.message);
-      });
+const useGames = (gameQuery: GameQuery) => {
+  const { data, error, isLoading } = useQuery<FetchGamesResponse, Error>({
+    queryKey: ["games", gameQuery],
+    queryFn: () => {
+      const params: any = {};
 
-    return () => {
-      controller.abort();
-    };
-  }, []);
-  return { games, error };
+      if (gameQuery.genreId) {
+        params.genres = gameQuery.genreId;
+      }
+
+      if (gameQuery.platformId) {
+        params.parent_platforms = gameQuery.platformId;
+      }
+
+      if (gameQuery.sortOrder) {
+        params.ordering = gameQuery.sortOrder;
+      }
+
+      if (gameQuery.searchText) {
+        params.search = gameQuery.searchText;
+      }
+
+      return apiClient
+        .get<FetchGamesResponse>("/games", { params })
+        .then((res) => res.data);
+    },
+  });
+
+  return { games: data?.results || [], error: error?.message || "", isLoading };
 };
+
 export default useGames;
