@@ -67,7 +67,7 @@ const UserDashboard: React.FC = () => {
                       </Text>
                       <HStack spacing={4}>
                         <HStack spacing={1}>
-                          <Icon as={FiCalendar} color="gray.400" />
+                          <FiCalendar color="gray.400" />
                           <Text fontSize="sm" color="gray.500">
                             Member since {memberSince}
                           </Text>
@@ -186,7 +186,7 @@ const UserDashboard: React.FC = () => {
                         )}
                     </VStack>
                     <Button
-                      leftIcon={<Icon as={FiEdit3} />}
+                      leftIcon={<FiEdit3 />}
                       colorScheme="purple"
                       variant="outline"
                       size="sm"
@@ -206,7 +206,7 @@ const UserDashboard: React.FC = () => {
               <CardBody>
                 <Stat>
                   <HStack>
-                    <Icon as={FiHeart} color="red.400" boxSize={5} />
+                    <FiHeart color="red.400" size={20} />
                     <StatLabel>Favorite Games</StatLabel>
                   </HStack>
                   <StatNumber color="red.400">
@@ -220,10 +220,9 @@ const UserDashboard: React.FC = () => {
               <CardBody>
                 <Stat>
                   <HStack>
-                    <Icon
-                      as={IoGameControllerOutline}
+                    <IoGameControllerOutline
                       color="blue.400"
-                      boxSize={5}
+                      size={20}
                     />
                     <StatLabel>Games Played</StatLabel>
                   </HStack>
@@ -238,7 +237,7 @@ const UserDashboard: React.FC = () => {
               <CardBody>
                 <Stat>
                   <HStack>
-                    <Icon as={FiCalendar} color="green.400" boxSize={5} />
+                    <FiCalendar color="green.400" size={20} />
                     <StatLabel>Days Active</StatLabel>
                   </HStack>
                   <StatNumber color="green.400">
@@ -261,13 +260,11 @@ const UserDashboard: React.FC = () => {
                 </Text>
                 <Divider />
                 <Box textAlign="center" py={8}>
-                  <Icon
-                    as={IoGameControllerOutline}
-                    boxSize={12}
+                  <IoGameControllerOutline
+                    size={48}
                     color="gray.300"
-                    mb={4}
                   />
-                  <Text color="gray.500" fontSize="lg">
+                  <Text color="gray.500" fontSize="lg" mt={4}>
                     No recent activity
                   </Text>
                   <Text color="gray.400" fontSize="sm">
@@ -292,8 +289,8 @@ const UserDashboard: React.FC = () => {
                 </HStack>
                 <Divider />
                 <Box textAlign="center" py={8}>
-                  <Icon as={FiHeart} boxSize={12} color="gray.300" mb={4} />
-                  <Text color="gray.500" fontSize="lg">
+                  <FiHeart size={48} color="gray.300" />
+                  <Text color="gray.500" fontSize="lg" mt={4}>
                     No favorite games yet
                   </Text>
                   <Text color="gray.400" fontSize="sm">

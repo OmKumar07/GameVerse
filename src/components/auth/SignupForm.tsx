@@ -24,6 +24,7 @@ import {
   Switch,
   Divider,
   Badge,
+  Icon,
 } from "@chakra-ui/react";
 import { FiPlus, FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useAuth } from "../../hooks/useAuth";
