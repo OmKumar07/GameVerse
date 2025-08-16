@@ -28,6 +28,7 @@ import {
   TagCloseButton,
   IconButton,
   Divider,
+  Icon,
 } from "@chakra-ui/react";
 import { FiCamera, FiPlus } from "react-icons/fi";
 import { useAuth } from "../../hooks/useAuth";

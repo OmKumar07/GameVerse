@@ -12,7 +12,6 @@ import {
   Text,
   VStack,
   useColorModeValue,
-  Icon,
   useDisclosure,
 } from "@chakra-ui/react";
 import { FiUser, FiSettings, FiLogOut, FiHeart } from "react-icons/fi";
@@ -99,7 +98,7 @@ const ProfileMenu: React.FC = () => {
         </Box>
 
         <MenuItem
-          icon={<Icon as={FiUser} />}
+          icon={<FiUser />}
           _hover={{ bg: hoverBg }}
           fontWeight="medium"
           onClick={() => (window.location.href = "/dashboard")}
@@ -108,7 +107,7 @@ const ProfileMenu: React.FC = () => {
         </MenuItem>
 
         <MenuItem
-          icon={<Icon as={FiHeart} />}
+          icon={<FiHeart />}
           _hover={{ bg: hoverBg }}
           fontWeight="medium"
         >
@@ -116,7 +115,7 @@ const ProfileMenu: React.FC = () => {
         </MenuItem>
 
         <MenuItem
-          icon={<Icon as={FiSettings} />}
+          icon={<FiSettings />}
           _hover={{ bg: hoverBg }}
           fontWeight="medium"
         >
@@ -126,7 +125,7 @@ const ProfileMenu: React.FC = () => {
         <MenuDivider />
 
         <MenuItem
-          icon={<Icon as={FiLogOut} />}
+          icon={<FiLogOut />}
           _hover={{ bg: "red.50", color: "red.600" }}
           fontWeight="medium"
           onClick={handleLogout}
