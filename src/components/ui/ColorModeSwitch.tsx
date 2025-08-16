@@ -16,7 +16,7 @@ const ColorModeSwitch = () => {
   return (
     <HStack spacing={3}>
       <Icon
-        as={BsSun}
+        as={BsSun as any}
         color={colorMode === "light" ? "orange.400" : "gray.400"}
       />
       <Switch
@@ -26,7 +26,7 @@ const ColorModeSwitch = () => {
         onChange={toggleColorMode}
       />
       <Icon
-        as={BsMoon}
+        as={BsMoon as any}
         color={colorMode === "dark" ? "blue.400" : "gray.400"}
       />
       <Text

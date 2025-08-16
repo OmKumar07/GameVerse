@@ -56,7 +56,7 @@ const ErrorFallback = ({
           borderRadius="full"
         >
           <Icon
-            as={BsWifi}
+            as={BsWifi as any}
             boxSize={8}
             color={useColorModeValue("red.500", "red.300")}
           />
@@ -105,7 +105,7 @@ const ErrorFallback = ({
             colorScheme="purple"
             size="lg"
             w="full"
-            leftIcon={<Icon as={BsArrowClockwise} />}
+            leftIcon={<Icon as={BsArrowClockwise as any} />}
             _hover={{ transform: "translateY(-1px)" }}
             transition="all 0.2s"
           >
@@ -123,7 +123,7 @@ const ErrorFallback = ({
                 colorScheme="blue"
                 size="md"
                 flex={1}
-                leftIcon={<Icon as={BsShield} />}
+                leftIcon={<Icon as={BsShield as any} />}
                 fontSize="sm"
               >
                 Learn about VPN

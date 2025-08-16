@@ -44,7 +44,7 @@ const SortSelector = ({ onSelectSortOrder, sortOrder }: Props) => {
       <MenuButton
         as={Button}
         rightIcon={<ChevronDownIcon />}
-        leftIcon={<Icon as={BsSortDown} />}
+        leftIcon={<Icon as={BsSortDown as any} />}
         bg={bgColor}
         border="1px"
         borderColor={borderColor}

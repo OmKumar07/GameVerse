@@ -43,7 +43,7 @@ const SearchInput = ({ onSearch }: Props) => {
           transition="all 0.2s"
         />
         <Icon
-          as={BsSearch}
+          as={BsSearch as any}
           color="gray.400"
           position="absolute"
           left={4}
