@@ -24,15 +24,15 @@ function App() {
       setCurrentRoute(window.location.pathname);
     };
 
-    window.addEventListener('popstate', handleRouteChange);
-    return () => window.removeEventListener('popstate', handleRouteChange);
+    window.addEventListener("popstate", handleRouteChange);
+    return () => window.removeEventListener("popstate", handleRouteChange);
   }, []);
 
   // Update document title dynamically based on current filters
   useEffect(() => {
     let title = "GameVerse";
 
-    if (currentRoute === '/dashboard') {
+    if (currentRoute === "/dashboard") {
       title = "Dashboard - GameVerse";
     } else if (searchText) {
       title = `"${searchText}" - GameVerse`;
@@ -48,7 +48,7 @@ function App() {
   }, [searchText, selectedGenre, selectedPlatform, currentRoute]);
 
   // Render dashboard page if on dashboard route
-  if (currentRoute === '/dashboard') {
+  if (currentRoute === "/dashboard") {
     return (
       <AuthProvider>
         <Box minH="100vh" bg={bgColor}>

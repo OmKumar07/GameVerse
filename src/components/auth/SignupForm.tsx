@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -11,59 +11,63 @@ import {
   Alert,
   AlertIcon,
   useToast,
-} from '@chakra-ui/react';
-import { useAuth } from '../../hooks/useAuth';
+} from "@chakra-ui/react";
+import { useAuth } from "../../hooks/useAuth";
 
 interface SignupFormProps {
   onSwitchToLogin: () => void;
   onClose: () => void;
 }
 
-const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onClose }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [error, setError] = useState('');
+const SignupForm: React.FC<SignupFormProps> = ({
+  onSwitchToLogin,
+  onClose,
+}) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [error, setError] = useState("");
   const { signup, isLoading } = useAuth();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const inputBg = useColorModeValue('gray.50', 'gray.700');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  const bgColor = useColorModeValue("white", "gray.800");
+  const inputBg = useColorModeValue("gray.50", "gray.700");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!email || !password || !username || !displayName) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError("Password must be at least 6 characters long");
       return;
     }
 
     try {
       await signup(email, password, username, displayName);
       toast({
-        title: 'Account created!',
-        description: 'Welcome to GameVerse! Your account has been created successfully.',
-        status: 'success',
+        title: "Account created!",
+        description:
+          "Welcome to GameVerse! Your account has been created successfully.",
+        status: "success",
         duration: 3000,
         isClosable: true,
       });
       onClose();
     } catch (err) {
-      setError('Failed to create account. Please try again.');
+      setError("Failed to create account. Please try again.");
     }
   };
 
@@ -106,8 +110,11 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onClose }) => 
                 bg={inputBg}
                 border="1px"
                 borderColor={borderColor}
-                _hover={{ borderColor: 'purple.300' }}
-                _focus={{ borderColor: 'purple.400', boxShadow: '0 0 0 1px purple.400' }}
+                _hover={{ borderColor: "purple.300" }}
+                _focus={{
+                  borderColor: "purple.400",
+                  boxShadow: "0 0 0 1px purple.400",
+                }}
                 placeholder="Your display name"
               />
             </FormControl>
@@ -117,12 +124,17 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onClose }) => 
               <Input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s/g, ''))}
+                onChange={(e) =>
+                  setUsername(e.target.value.toLowerCase().replace(/\s/g, ""))
+                }
                 bg={inputBg}
                 border="1px"
                 borderColor={borderColor}
-                _hover={{ borderColor: 'purple.300' }}
-                _focus={{ borderColor: 'purple.400', boxShadow: '0 0 0 1px purple.400' }}
+                _hover={{ borderColor: "purple.300" }}
+                _focus={{
+                  borderColor: "purple.400",
+                  boxShadow: "0 0 0 1px purple.400",
+                }}
                 placeholder="username"
               />
             </FormControl>
@@ -136,8 +148,11 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onClose }) => 
                 bg={inputBg}
                 border="1px"
                 borderColor={borderColor}
-                _hover={{ borderColor: 'purple.300' }}
-                _focus={{ borderColor: 'purple.400', boxShadow: '0 0 0 1px purple.400' }}
+                _hover={{ borderColor: "purple.300" }}
+                _focus={{
+                  borderColor: "purple.400",
+                  boxShadow: "0 0 0 1px purple.400",
+                }}
                 placeholder="your.email@example.com"
               />
             </FormControl>
@@ -151,8 +166,11 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onClose }) => 
                 bg={inputBg}
                 border="1px"
                 borderColor={borderColor}
-                _hover={{ borderColor: 'purple.300' }}
-                _focus={{ borderColor: 'purple.400', boxShadow: '0 0 0 1px purple.400' }}
+                _hover={{ borderColor: "purple.300" }}
+                _focus={{
+                  borderColor: "purple.400",
+                  boxShadow: "0 0 0 1px purple.400",
+                }}
                 placeholder="At least 6 characters"
               />
             </FormControl>
@@ -166,8 +184,11 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onClose }) => 
                 bg={inputBg}
                 border="1px"
                 borderColor={borderColor}
-                _hover={{ borderColor: 'purple.300' }}
-                _focus={{ borderColor: 'purple.400', boxShadow: '0 0 0 1px purple.400' }}
+                _hover={{ borderColor: "purple.300" }}
+                _focus={{
+                  borderColor: "purple.400",
+                  boxShadow: "0 0 0 1px purple.400",
+                }}
                 placeholder="Confirm your password"
               />
             </FormControl>
@@ -198,7 +219,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSwitchToLogin, onClose }) => 
             variant="ghost"
             colorScheme="purple"
             onClick={onSwitchToLogin}
-            _hover={{ bg: useColorModeValue('purple.50', 'purple.900') }}
+            _hover={{ bg: useColorModeValue("purple.50", "purple.900") }}
           >
             Sign In
           </Button>
