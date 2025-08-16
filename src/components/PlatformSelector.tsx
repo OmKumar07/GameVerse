@@ -21,12 +21,26 @@ interface Props {
 }
 
 const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
-  const { data, error, isLoading } = usePlatforms();
+  const { data, error, isLoading, refetch } = usePlatforms();
   const bgColor = useColorModeValue("white", "gray.700");
   const hoverColor = useColorModeValue("gray.50", "gray.600");
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
-  if (error) return null;
+  if (error) {
+    return (
+      <Button
+        onClick={() => refetch()}
+        variant="outline"
+        colorScheme="red"
+        size="md"
+        leftIcon={<Icon as={BsController} />}
+        height="44px"
+      >
+        Retry Platforms
+      </Button>
+    );
+  }
+
   if (isLoading)
     return <Skeleton height="44px" width="200px" borderRadius="lg" />;
 

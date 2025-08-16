@@ -17,13 +17,30 @@ interface Props {
 }
 
 const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
-  const { data, error, isLoading } = useGenres();
+  const { data, error, isLoading, refetch } = useGenres();
   const hoverBg = useColorModeValue("gray.100", "gray.700");
   const selectedBg = useColorModeValue("purple.50", "purple.900");
   const selectedColor = useColorModeValue("purple.600", "purple.200");
   const textColor = useColorModeValue("gray.700", "gray.200");
 
-  if (error) return null;
+  if (error) {
+    return (
+      <Box p={6} textAlign="center">
+        <Text color="red.500" mb={4} fontSize="sm">
+          Failed to load genres
+        </Text>
+        <Button
+          onClick={() => refetch()}
+          colorScheme="purple"
+          variant="outline"
+          size="sm"
+        >
+          Retry
+        </Button>
+      </Box>
+    );
+  }
+
   if (isLoading)
     return (
       <Box display="flex" justifyContent="center" p={8}>
