@@ -1,26 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Modal,
   ModalOverlay,
   ModalContent,
   ModalCloseButton,
   useColorModeValue,
-} from '@chakra-ui/react';
-import LoginForm from './LoginForm';
-import SignupForm from './SignupForm';
+} from "@chakra-ui/react";
+import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialMode?: 'login' | 'signup';
+  initialMode?: "login" | "signup";
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login' }) => {
+const AuthModal: React.FC<AuthModalProps> = ({
+  isOpen,
+  onClose,
+  initialMode = "login",
+}) => {
   const [mode, setMode] = useState(initialMode);
-  const overlayBg = useColorModeValue('blackAlpha.300', 'blackAlpha.600');
+  const overlayBg = useColorModeValue("blackAlpha.300", "blackAlpha.600");
 
   const handleSwitchMode = () => {
-    setMode(mode === 'login' ? 'signup' : 'login');
+    setMode(mode === "login" ? "signup" : "login");
   };
 
   return (
@@ -34,10 +38,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           zIndex={10}
           color="white"
           bg="blackAlpha.300"
-          _hover={{ bg: 'blackAlpha.500' }}
+          _hover={{ bg: "blackAlpha.500" }}
           borderRadius="full"
         />
-        {mode === 'login' ? (
+        {mode === "login" ? (
           <LoginForm onSwitchToSignup={handleSwitchMode} onClose={onClose} />
         ) : (
           <SignupForm onSwitchToLogin={handleSwitchMode} onClose={onClose} />

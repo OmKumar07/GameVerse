@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Container,
@@ -17,24 +17,24 @@ import {
   Icon,
   Divider,
   Badge,
-} from '@chakra-ui/react';
-import { FiHeart, FiCalendar, FiEdit3 } from 'react-icons/fi';
-import { IoGameControllerOutline } from 'react-icons/io5';
-import { useAuth } from '../../hooks/useAuth';
+} from "@chakra-ui/react";
+import { FiHeart, FiCalendar, FiEdit3 } from "react-icons/fi";
+import { IoGameControllerOutline } from "react-icons/io5";
+import { useAuth } from "../../hooks/useAuth";
 
 const UserDashboard: React.FC = () => {
   const { user } = useAuth();
-  const bgColor = useColorModeValue('gray.50', 'gray.900');
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
 
   if (!user) {
     return null;
   }
 
-  const memberSince = new Date(user.createdAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
+  const memberSince = new Date(user.createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
   });
 
   return (
@@ -107,7 +107,11 @@ const UserDashboard: React.FC = () => {
               <CardBody>
                 <Stat>
                   <HStack>
-                    <Icon as={IoGameControllerOutline} color="blue.400" boxSize={5} />
+                    <Icon
+                      as={IoGameControllerOutline}
+                      color="blue.400"
+                      boxSize={5}
+                    />
                     <StatLabel>Games Played</StatLabel>
                   </HStack>
                   <StatNumber color="blue.400">0</StatNumber>
@@ -123,7 +127,10 @@ const UserDashboard: React.FC = () => {
                     <StatLabel>Days Active</StatLabel>
                   </HStack>
                   <StatNumber color="green.400">
-                    {Math.ceil((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24))}
+                    {Math.ceil(
+                      (Date.now() - new Date(user.createdAt).getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    )}
                   </StatNumber>
                 </Stat>
               </CardBody>
@@ -139,7 +146,12 @@ const UserDashboard: React.FC = () => {
                 </Text>
                 <Divider />
                 <Box textAlign="center" py={8}>
-                  <Icon as={IoGameControllerOutline} boxSize={12} color="gray.300" mb={4} />
+                  <Icon
+                    as={IoGameControllerOutline}
+                    boxSize={12}
+                    color="gray.300"
+                    mb={4}
+                  />
                   <Text color="gray.500" fontSize="lg">
                     No recent activity
                   </Text>

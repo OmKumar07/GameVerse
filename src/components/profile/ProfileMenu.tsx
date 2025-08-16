@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Avatar,
   Box,
@@ -14,18 +14,18 @@ import {
   useColorModeValue,
   Icon,
   useDisclosure,
-} from '@chakra-ui/react';
-import { FiUser, FiSettings, FiLogOut, FiHeart } from 'react-icons/fi';
-import { useAuth } from '../../hooks/useAuth';
-import AuthModal from '../auth/AuthModal';
+} from "@chakra-ui/react";
+import { FiUser, FiSettings, FiLogOut, FiHeart } from "react-icons/fi";
+import { useAuth } from "../../hooks/useAuth";
+import AuthModal from "../auth/AuthModal";
 
 const ProfileMenu: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const menuBg = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
-  const hoverBg = useColorModeValue('gray.50', 'gray.700');
+  const menuBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const hoverBg = useColorModeValue("gray.50", "gray.700");
 
   if (!isAuthenticated || !user) {
     return (
@@ -36,8 +36,8 @@ const ProfileMenu: React.FC = () => {
           size="sm"
           onClick={onOpen}
           _hover={{
-            bg: useColorModeValue('purple.50', 'purple.900'),
-            transform: 'translateY(-1px)',
+            bg: useColorModeValue("purple.50", "purple.900"),
+            transform: "translateY(-1px)",
           }}
           transition="all 0.2s"
         >
@@ -63,16 +63,16 @@ const ProfileMenu: React.FC = () => {
             border="2px"
             borderColor="purple.400"
             _hover={{
-              borderColor: 'purple.300',
-              transform: 'scale(1.05)',
+              borderColor: "purple.300",
+              transform: "scale(1.05)",
             }}
             transition="all 0.2s"
           />
           <Text
-            display={{ base: 'none', md: 'block' }}
+            display={{ base: "none", md: "block" }}
             fontSize="sm"
             fontWeight="medium"
-            color={useColorModeValue('gray.700', 'gray.200')}
+            color={useColorModeValue("gray.700", "gray.200")}
           >
             {user.displayName}
           </Text>
@@ -102,7 +102,7 @@ const ProfileMenu: React.FC = () => {
           icon={<Icon as={FiUser} />}
           _hover={{ bg: hoverBg }}
           fontWeight="medium"
-          onClick={() => window.location.href = '/dashboard'}
+          onClick={() => (window.location.href = "/dashboard")}
         >
           Profile
         </MenuItem>
@@ -127,7 +127,7 @@ const ProfileMenu: React.FC = () => {
 
         <MenuItem
           icon={<Icon as={FiLogOut} />}
-          _hover={{ bg: 'red.50', color: 'red.600' }}
+          _hover={{ bg: "red.50", color: "red.600" }}
           fontWeight="medium"
           onClick={handleLogout}
         >

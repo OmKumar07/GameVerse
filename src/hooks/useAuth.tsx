@@ -1,9 +1,15 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { User, AuthState } from '../entities/User';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { User, AuthState } from "../entities/User";
+import apiClient from "../services/auth-api-client";
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, username: string, displayName: string) => Promise<void>;
+  signup: (
+    email: string,
+    password: string,
+    username: string,
+    displayName: string
+  ) => Promise<void>;
   logout: () => void;
   updateProfile: (updates: Partial<User>) => void;
 }
@@ -13,7 +19,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -30,64 +36,63 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   });
 
   const login = async (email: string, password: string) => {
-    setAuthState(prev => ({ ...prev, isLoading: true }));
-    
+    setAuthState((prev) => ({ ...prev, isLoading: true }));
+
     try {
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
-      // Mock user data
-      const mockUser: User = {
-        id: '1',
+      const response = await apiClient.post("/auth/login", {
         email,
-        username: email.split('@')[0],
-        displayName: email.split('@')[0],
-        profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
-        createdAt: new Date().toISOString(),
-        favoriteGames: [],
-      };
+        password,
+      });
+
+      const { token, user } = response.data;
 
       setAuthState({
-        user: mockUser,
+        user,
         isAuthenticated: true,
         isLoading: false,
       });
 
-      // Store in localStorage for persistence
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      setAuthState(prev => ({ ...prev, isLoading: false }));
-      throw new Error('Login failed');
+      // Store token and user data
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("user", JSON.stringify(user));
+    } catch (error: any) {
+      setAuthState((prev) => ({ ...prev, isLoading: false }));
+      const message = error.response?.data?.message || "Login failed";
+      throw new Error(message);
     }
   };
 
-  const signup = async (email: string, password: string, username: string, displayName: string) => {
-    setAuthState(prev => ({ ...prev, isLoading: true }));
-    
+  const signup = async (
+    email: string,
+    password: string,
+    username: string,
+    displayName: string
+  ) => {
+    setAuthState((prev) => ({ ...prev, isLoading: true }));
+
     try {
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
-      const mockUser: User = {
-        id: Date.now().toString(),
+      const response = await apiClient.post("/auth/register", {
         email,
+        password,
         username,
         displayName,
-        profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
-        createdAt: new Date().toISOString(),
-        favoriteGames: [],
-      };
+      });
+
+      const { token, user } = response.data;
 
       setAuthState({
-        user: mockUser,
+        user,
         isAuthenticated: true,
         isLoading: false,
       });
 
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      setAuthState(prev => ({ ...prev, isLoading: false }));
-      throw new Error('Signup failed');
+      // Store token and user data
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("user", JSON.stringify(user));
+    } catch (error: any) {
+      setAuthState((prev) => ({ ...prev, isLoading: false }));
+      const message = error.response?.data?.message || "Signup failed";
+      throw new Error(message);
     }
   };
 
@@ -97,32 +102,52 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       isAuthenticated: false,
       isLoading: false,
     });
-    localStorage.removeItem('user');
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
   };
 
   const updateProfile = (updates: Partial<User>) => {
     if (authState.user) {
       const updatedUser = { ...authState.user, ...updates };
-      setAuthState(prev => ({ ...prev, user: updatedUser }));
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setAuthState((prev) => ({ ...prev, user: updatedUser }));
+      localStorage.setItem("user", JSON.stringify(updatedUser));
     }
   };
 
   // Check for existing user on mount
   React.useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        setAuthState({
-          user,
-          isAuthenticated: true,
-          isLoading: false,
-        });
-      } catch (error) {
-        localStorage.removeItem('user');
+    const checkAuthStatus = async () => {
+      const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("authToken");
+
+      if (storedUser && storedToken) {
+        try {
+          // Verify token with backend
+          const response = await apiClient.post("/auth/verify-token", {
+            token: storedToken,
+          });
+
+          if (response.data.valid) {
+            const user = JSON.parse(storedUser);
+            setAuthState({
+              user,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+          } else {
+            // Token invalid, clear storage
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("user");
+          }
+        } catch (error) {
+          // Token verification failed, clear storage
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("user");
+        }
       }
-    }
+    };
+
+    checkAuthStatus();
   }, []);
 
   const value: AuthContextType = {
