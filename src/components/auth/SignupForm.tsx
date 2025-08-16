@@ -126,13 +126,38 @@ const SignupForm: React.FC<SignupFormProps> = ({
       return false;
     }
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address");
       return false;
     }
 
+    // Username validation
+    if (username.length < 3) {
+      setError("Username must be at least 3 characters long");
+      return false;
+    }
+
+    if (username.length > 20) {
+      setError("Username cannot exceed 20 characters");
+      return false;
+    }
+
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if (!usernameRegex.test(username)) {
+      setError("Username can only contain letters, numbers, and underscores");
+      return false;
+    }
+
+    // Password validation
     if (password.length < 6) {
       setError("Password must be at least 6 characters long");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
       return false;
     }
 
@@ -258,9 +283,13 @@ const SignupForm: React.FC<SignupFormProps> = ({
         <Input
           type="text"
           value={username}
-          onChange={(e) =>
-            setUsername(e.target.value.toLowerCase().replace(/\s/g, ""))
-          }
+          onChange={(e) => {
+            // Only allow letters, numbers, and underscores
+            const filtered = e.target.value
+              .toLowerCase()
+              .replace(/[^a-z0-9_]/g, "");
+            setUsername(filtered);
+          }}
           bg={inputBg}
           border="1px"
           borderColor={borderColor}
@@ -269,8 +298,12 @@ const SignupForm: React.FC<SignupFormProps> = ({
             borderColor: "purple.400",
             boxShadow: "0 0 0 1px purple.400",
           }}
-          placeholder="username"
+          placeholder="username (letters, numbers, underscores only)"
+          maxLength={20}
         />
+        <Text fontSize="xs" color="gray.500" mt={1}>
+          3-20 characters. Letters, numbers, and underscores only.
+        </Text>
       </FormControl>
 
       <FormControl isRequired>
