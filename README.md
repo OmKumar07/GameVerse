@@ -180,7 +180,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Developer**: Om Kumar
 - **Repository**: [GitHub - GameVerse](https://github.com/OmKumar07/GameVerse)
-- **Live Demo**: [GameVerse Live](https://your-demo-url.netlify.app)
+- **Live Demo**: [GameVerse Live]([https://your-demo-url.netlify.app](https://game-verse7.netlify.app/))
 
 ---
 
