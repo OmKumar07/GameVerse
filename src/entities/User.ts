@@ -2,10 +2,46 @@ export interface User {
   id: string;
   email: string;
   username: string;
-  profileImage?: string;
   displayName: string;
+  profileImage?: {
+    url: string;
+    publicId?: string;
+  };
+  bio?: string;
+  location?: string;
+  website?: string;
+  favoriteGenres?: string[];
+  gamingPlatforms?: string[];
+  favoriteGames?: Array<{
+    gameId: number;
+    gameName: string;
+    gameImage?: string;
+    addedAt: string;
+  }>;
+  playedGames?: Array<{
+    gameId: number;
+    gameName: string;
+    gameImage?: string;
+    status: "playing" | "completed" | "dropped" | "plan-to-play";
+    rating?: number;
+    hoursPlayed?: number;
+    addedAt: string;
+    completedAt?: string;
+  }>;
+  totalGamesPlayed?: number;
+  totalHoursPlayed?: number;
+  achievementsUnlocked?: number;
+  followers?: string[];
+  following?: string[];
+  profilePrivacy?: "public" | "friends" | "private";
+  showEmail?: boolean;
+  showGameStats?: boolean;
+  isActive?: boolean;
+  isVerified?: boolean;
+  lastLoginAt?: string;
+  loginCount?: number;
   createdAt: string;
-  favoriteGames?: string[];
+  updatedAt?: string;
 }
 
 export interface AuthState {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -17,13 +17,17 @@ import {
   Icon,
   Divider,
   Badge,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { FiHeart, FiCalendar, FiEdit3 } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { useAuth } from "../../hooks/useAuth";
+import EditProfileModal from "./EditProfileModal";
 
 const UserDashboard: React.FC = () => {
   const { user } = useAuth();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -48,7 +52,7 @@ const UserDashboard: React.FC = () => {
                 <Avatar
                   size="xl"
                   name={user.displayName}
-                  src={user.profileImage}
+                  src={user.profileImage?.url}
                   border="4px"
                   borderColor="purple.400"
                 />
@@ -72,12 +76,121 @@ const UserDashboard: React.FC = () => {
                           Gamer
                         </Badge>
                       </HStack>
+                      {user.bio && (
+                        <Text
+                          fontSize="sm"
+                          color="gray.600"
+                          mt={2}
+                          maxW="500px"
+                        >
+                          {user.bio}
+                        </Text>
+                      )}
+                      {user.location && (
+                        <Text fontSize="sm" color="gray.500">
+                          📍 {user.location}
+                        </Text>
+                      )}
+                      {user.website && (
+                        <Text fontSize="sm" color="gray.500">
+                          🌐{" "}
+                          <Text
+                            as="a"
+                            href={user.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            color="purple.400"
+                            textDecoration="underline"
+                            _hover={{ color: "purple.600" }}
+                          >
+                            {user.website.replace(/^https?:\/\//, "")}
+                          </Text>
+                        </Text>
+                      )}
+
+                      {/* Gaming Preferences */}
+                      {user.favoriteGenres &&
+                        user.favoriteGenres.length > 0 && (
+                          <VStack align="start" spacing={1} mt={2}>
+                            <Text
+                              fontSize="sm"
+                              fontWeight="medium"
+                              color="gray.600"
+                            >
+                              Favorite Genres:
+                            </Text>
+                            <Wrap spacing={1}>
+                              {user.favoriteGenres.slice(0, 5).map((genre) => (
+                                <WrapItem key={genre}>
+                                  <Badge
+                                    colorScheme="purple"
+                                    variant="subtle"
+                                    fontSize="xs"
+                                  >
+                                    {genre}
+                                  </Badge>
+                                </WrapItem>
+                              ))}
+                              {user.favoriteGenres.length > 5 && (
+                                <WrapItem>
+                                  <Badge
+                                    colorScheme="gray"
+                                    variant="subtle"
+                                    fontSize="xs"
+                                  >
+                                    +{user.favoriteGenres.length - 5} more
+                                  </Badge>
+                                </WrapItem>
+                              )}
+                            </Wrap>
+                          </VStack>
+                        )}
+
+                      {user.gamingPlatforms &&
+                        user.gamingPlatforms.length > 0 && (
+                          <VStack align="start" spacing={1} mt={1}>
+                            <Text
+                              fontSize="sm"
+                              fontWeight="medium"
+                              color="gray.600"
+                            >
+                              Gaming Platforms:
+                            </Text>
+                            <Wrap spacing={1}>
+                              {user.gamingPlatforms
+                                .slice(0, 4)
+                                .map((platform) => (
+                                  <WrapItem key={platform}>
+                                    <Badge
+                                      colorScheme="blue"
+                                      variant="subtle"
+                                      fontSize="xs"
+                                    >
+                                      {platform}
+                                    </Badge>
+                                  </WrapItem>
+                                ))}
+                              {user.gamingPlatforms.length > 4 && (
+                                <WrapItem>
+                                  <Badge
+                                    colorScheme="gray"
+                                    variant="subtle"
+                                    fontSize="xs"
+                                  >
+                                    +{user.gamingPlatforms.length - 4} more
+                                  </Badge>
+                                </WrapItem>
+                              )}
+                            </Wrap>
+                          </VStack>
+                        )}
                     </VStack>
                     <Button
                       leftIcon={<Icon as={FiEdit3} />}
                       colorScheme="purple"
                       variant="outline"
                       size="sm"
+                      onClick={() => setIsEditModalOpen(true)}
                     >
                       Edit Profile
                     </Button>
@@ -114,7 +227,9 @@ const UserDashboard: React.FC = () => {
                     />
                     <StatLabel>Games Played</StatLabel>
                   </HStack>
-                  <StatNumber color="blue.400">0</StatNumber>
+                  <StatNumber color="blue.400">
+                    {user.totalGamesPlayed || 0}
+                  </StatNumber>
                 </Stat>
               </CardBody>
             </Card>
@@ -189,6 +304,12 @@ const UserDashboard: React.FC = () => {
             </CardBody>
           </Card>
         </VStack>
+
+        {/* Edit Profile Modal */}
+        <EditProfileModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+        />
       </Container>
     </Box>
   );
