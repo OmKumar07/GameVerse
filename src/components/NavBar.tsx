@@ -2,6 +2,7 @@ import { Box, HStack, Image, Text, useColorModeValue } from "@chakra-ui/react";
 import logo from "../assets/logo.webp";
 import ColorModeSwitch from "./ui/ColorModeSwitch";
 import SearchInput from "./SearchInput";
+import ProfileMenu from "./profile/ProfileMenu";
 
 interface Props {
   onSearch: (searchText: string) => void;
@@ -57,7 +58,10 @@ const NavBar = ({ onSearch }: Props) => {
           <SearchInput onSearch={onSearch} />
         </Box>
 
-        <ColorModeSwitch />
+        <HStack spacing={4}>
+          <ColorModeSwitch />
+          <ProfileMenu />
+        </HStack>
       </HStack>
     </Box>
   );
