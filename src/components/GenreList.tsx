@@ -22,6 +22,7 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
   const selectedBg = useColorModeValue("purple.50", "purple.900");
   const selectedColor = useColorModeValue("purple.600", "purple.200");
   const textColor = useColorModeValue("gray.700", "gray.200");
+  const headingColor = useColorModeValue("gray.700", "gray.200");
 
   if (error) {
     return (
@@ -52,12 +53,7 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
 
   return (
     <Box>
-      <Heading
-        size="md"
-        mb={6}
-        color={useColorModeValue("gray.700", "gray.200")}
-        fontWeight="semibold"
-      >
+      <Heading size="md" mb={6} color={headingColor} fontWeight="semibold">
         🎮 Genres
       </Heading>
 
