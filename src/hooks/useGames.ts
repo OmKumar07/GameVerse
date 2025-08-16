@@ -65,6 +65,7 @@ const useGames = (gameQuery: GameQuery) => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ["games", gameQuery],
     queryFn: fetchGames,
@@ -78,11 +79,12 @@ const useGames = (gameQuery: GameQuery) => {
 
   return {
     games,
-    error: error?.message || "",
+    error,
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    refetch,
   };
 };
 

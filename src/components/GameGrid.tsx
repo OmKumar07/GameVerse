@@ -13,6 +13,7 @@ import GameCardSkeleton from "./GameCardSkeleton";
 import GameHeading from "./GameHeading";
 import PlatformSelector from "./PlatformSelector";
 import SortSelector from "./SortSelector";
+import ErrorFallback from "./ErrorFallback";
 import { Platform } from "@/hooks/useGames";
 import { Genre } from "@/hooks/useGenres";
 
@@ -47,6 +48,7 @@ const GameGrid = ({
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useGames(gameQuery);
 
   const skeletons = [1, 2, 3, 4, 5, 6];
@@ -68,7 +70,18 @@ const GameGrid = ({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (error) return <Text color="red.500">{error}</Text>;
+  // Show error fallback if there's an error
+  if (error) {
+    return (
+      <Box padding={{ base: "20px", md: "32px" }} maxW="1400px" mx="auto">
+        <ErrorFallback
+          error={error.message || "Something went wrong"}
+          onRetry={() => refetch()}
+          title="Unable to Load Games"
+        />
+      </Box>
+    );
+  }
 
   return (
     <Box padding={{ base: "20px", md: "32px" }} maxW="1400px" mx="auto">
