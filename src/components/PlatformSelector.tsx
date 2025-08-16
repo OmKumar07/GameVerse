@@ -33,7 +33,7 @@ const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
         variant="outline"
         colorScheme="red"
         size="md"
-        leftIcon={<Icon as={BsController} />}
+        leftIcon={<Icon as={BsController as any} />}
         height="44px"
       >
         Retry Platforms
@@ -44,14 +44,15 @@ const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
   if (isLoading)
     return <Skeleton height="44px" width="200px" borderRadius="lg" />;
 
-  const platforms = Array.isArray(data?.results) ? data.results : [];
+  const platforms =
+    data?.results && Array.isArray(data.results) ? data.results : [];
 
   return (
     <Menu>
       <MenuButton
         as={Button}
         rightIcon={<ChevronDownIcon />}
-        leftIcon={<Icon as={BsController} />}
+        leftIcon={<Icon as={BsController as any} />}
         bg={bgColor}
         border="1px"
         borderColor={borderColor}
@@ -80,7 +81,7 @@ const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
           _hover={{ bg: hoverColor }}
           fontWeight={!selectedPlatform ? "bold" : "normal"}
         >
-          <Icon as={BsController} mr={3} />
+          <Icon as={BsController as any} mr={3} />
           All Platforms
         </MenuItem>
         {platforms.map((platform: Platform) => (
@@ -92,7 +93,7 @@ const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
               selectedPlatform?.id === platform.id ? "bold" : "normal"
             }
           >
-            <Icon as={BsController} mr={3} />
+            <Icon as={BsController as any} mr={3} />
             {platform.name}
           </MenuItem>
         ))}
