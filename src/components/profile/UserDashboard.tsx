@@ -220,10 +220,7 @@ const UserDashboard: React.FC = () => {
               <CardBody>
                 <Stat>
                   <HStack>
-                    <IoGameControllerOutline
-                      color="blue.400"
-                      size={20}
-                    />
+                    <IoGameControllerOutline color="blue.400" size={20} />
                     <StatLabel>Games Played</StatLabel>
                   </HStack>
                   <StatNumber color="blue.400">
@@ -260,10 +257,7 @@ const UserDashboard: React.FC = () => {
                 </Text>
                 <Divider />
                 <Box textAlign="center" py={8}>
-                  <IoGameControllerOutline
-                    size={48}
-                    color="gray.300"
-                  />
+                  <IoGameControllerOutline size={48} color="gray.300" />
                   <Text color="gray.500" fontSize="lg" mt={4}>
                     No recent activity
                   </Text>
