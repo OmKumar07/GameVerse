@@ -30,3 +30,4 @@ backend/.env.production
 *.njsproj
 *.sln
 *.sw?
+backend/.env
