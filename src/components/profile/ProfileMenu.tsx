@@ -59,7 +59,7 @@ const ProfileMenu: React.FC = () => {
           <Avatar
             size="sm"
             name={user.displayName}
-            src={user.profileImage}
+            src={user.profileImage?.url}
             border="2px"
             borderColor="purple.400"
             _hover={{
