@@ -1,5 +1,5 @@
 import { Box, Grid, GridItem, useColorModeValue } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavBar from "./components/NavBar";
 import GameGrid from "./components/GameGrid";
 import GenreList from "./components/GenreList";
@@ -14,6 +14,23 @@ function App() {
 
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const sidebarBg = useColorModeValue("white", "gray.800");
+
+  // Update document title dynamically based on current filters
+  useEffect(() => {
+    let title = "GameVerse";
+
+    if (searchText) {
+      title = `"${searchText}" - GameVerse`;
+    } else if (selectedGenre) {
+      title = `${selectedGenre.name} Games - GameVerse`;
+    } else if (selectedPlatform && selectedPlatform.name) {
+      title = `${selectedPlatform.name} Games - GameVerse`;
+    } else {
+      title = "Discover Amazing Games - GameVerse";
+    }
+
+    document.title = title;
+  }, [searchText, selectedGenre, selectedPlatform]);
 
   return (
     <Box minH="100vh" bg={bgColor}>
