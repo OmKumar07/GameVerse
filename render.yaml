@@ -17,7 +17,7 @@ services:
       - key: FRONTEND_URL
         value: https://game-verse7.netlify.app
       - key: MONGODB_URI
-        value: mongodb+srv://omkumar07:mShFNYp5tycZ9SE@gameverse-cluster.dg5wz68.mongodb.net/User?retryWrites=true&w=majority
+        value: your_mongodb_connection_string_here
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRE

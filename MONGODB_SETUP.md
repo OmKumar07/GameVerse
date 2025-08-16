@@ -12,7 +12,7 @@
 **Before starting the backend**, you need to replace `<db_password>` in your `.env` file with your actual MongoDB Atlas password.
 
 1. **Open**: `backend/.env`
-2. **Find**: `MONGODB_URI=mongodb+srv://omkumar07:<db_password>@gameverse-cluster...`
+2. **Find**: `MONGODB_URI=mongodb+srv://username:<db_password>@cluster...`
 3. **Replace**: `<db_password>` with your actual password
 4. **Save** the file
 
