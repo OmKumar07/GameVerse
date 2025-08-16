@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: gameverse-backend
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install --prefix backend
+    startCommand: npm start --prefix backend
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        fromService:
+          type: web
+          name: gameverse-backend
+          property: port
+      - key: FRONTEND_URL
+        value: https://game-verse7.netlify.app
+      - key: MONGODB_URI
+        value: mongodb+srv://omkumar07:mShFNYp5tycZ9SE@gameverse-cluster.dg5wz68.mongodb.net/User?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: RAWG_API_KEY
+        value: 013463f3aa954e528acfadc53fda1cf8
+      - key: BCRYPT_ROUNDS
+        value: 12
+    healthCheckPath: /api/health
