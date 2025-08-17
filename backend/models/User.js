@@ -127,6 +127,54 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
+    // Custom Game Lists
+    customLists: [
+      {
+        id: {
+          type: String,
+          required: true,
+        },
+        name: {
+          type: String,
+          required: true,
+          maxlength: [50, "List name cannot exceed 50 characters"],
+        },
+        description: {
+          type: String,
+          maxlength: [200, "List description cannot exceed 200 characters"],
+        },
+        isPublic: {
+          type: Boolean,
+          default: false,
+        },
+        games: [
+          {
+            gameId: {
+              type: Number,
+              required: true,
+            },
+            gameName: {
+              type: String,
+              required: true,
+            },
+            gameImage: String,
+            addedAt: {
+              type: Date,
+              default: Date.now,
+            },
+          },
+        ],
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+        updatedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+
     // Activity & Statistics
     totalGamesPlayed: {
       type: Number,
@@ -277,6 +325,75 @@ userSchema.methods.addPlayedGame = function (gameData) {
   if (gameData.hoursPlayed) {
     this.totalHoursPlayed += gameData.hoursPlayed;
   }
+
+  return this.save();
+};
+
+// Custom Lists Methods
+userSchema.methods.createCustomList = function (listData) {
+  const newList = {
+    id: require("crypto").randomUUID(),
+    name: listData.name,
+    description: listData.description || "",
+    isPublic: listData.isPublic || false,
+    games: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  this.customLists.push(newList);
+  return this.save().then(() => newList);
+};
+
+userSchema.methods.updateCustomList = function (listId, updateData) {
+  const list = this.customLists.find((list) => list.id === listId);
+  if (!list) {
+    throw new Error("List not found");
+  }
+
+  if (updateData.name) list.name = updateData.name;
+  if (updateData.description !== undefined)
+    list.description = updateData.description;
+  if (updateData.isPublic !== undefined) list.isPublic = updateData.isPublic;
+  list.updatedAt = new Date();
+
+  return this.save();
+};
+
+userSchema.methods.deleteCustomList = function (listId) {
+  this.customLists = this.customLists.filter((list) => list.id !== listId);
+  return this.save();
+};
+
+userSchema.methods.addGameToList = function (listId, gameData) {
+  const list = this.customLists.find((list) => list.id === listId);
+  if (!list) {
+    throw new Error("List not found");
+  }
+
+  const existingGame = list.games.find(
+    (game) => game.gameId === gameData.gameId
+  );
+  if (!existingGame) {
+    list.games.push({
+      gameId: gameData.gameId,
+      gameName: gameData.gameName,
+      gameImage: gameData.gameImage,
+      addedAt: new Date(),
+    });
+    list.updatedAt = new Date();
+  }
+
+  return this.save();
+};
+
+userSchema.methods.removeGameFromList = function (listId, gameId) {
+  const list = this.customLists.find((list) => list.id === listId);
+  if (!list) {
+    throw new Error("List not found");
+  }
+
+  list.games = list.games.filter((game) => game.gameId !== gameId);
+  list.updatedAt = new Date();
 
   return this.save();
 };

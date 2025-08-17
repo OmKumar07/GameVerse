@@ -14,12 +14,13 @@ import {
 import React from "react";
 import PlatformIconList from "./PlatformIconList";
 import CriticScore from "./CriticScore";
-import { FaHeart, FaRegHeart, FaPlay, FaCheck } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaPlay, FaCheck, FaPlus } from "react-icons/fa";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
 import { usePlayedGames } from "@/hooks/usePlayedGames";
 import AuthModal from "./auth/AuthModal";
 import GameDetailsModal from "./GameDetailsModal";
+import AddToListModal from "./lists/AddToListModal";
 
 interface Props {
   game: Game;
@@ -41,6 +42,11 @@ const GameCard = ({ game }: Props) => {
     onOpen: onDetailsOpen,
     onClose: onDetailsClose,
   } = useDisclosure(); // For game details modal
+  const {
+    isOpen: isAddToListOpen,
+    onOpen: onAddToListOpen,
+    onClose: onAddToListClose,
+  } = useDisclosure(); // For add to list modal
   const toast = useToast();
 
   const handleCardClick = () => {
@@ -125,6 +131,17 @@ const GameCard = ({ game }: Props) => {
     }
   };
 
+  const handleAddToListClick = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling
+
+    if (!isAuthenticated) {
+      onOpen(); // Open auth modal
+      return;
+    }
+
+    onAddToListOpen();
+  };
+
   return (
     <>
       <Box
@@ -202,6 +219,19 @@ const GameCard = ({ game }: Props) => {
               onClick={handlePlayedClick}
             />
           </Tooltip>
+
+          {/* Add to List Icon */}
+          <Tooltip label="Add to list" placement="top" hasArrow>
+            <IconButton
+              aria-label="Add to list"
+              icon={<FaPlus color="white" />}
+              size="sm"
+              bg="blackAlpha.600"
+              _hover={{ bg: "blackAlpha.800" }}
+              borderRadius="full"
+              onClick={handleAddToListClick}
+            />
+          </Tooltip>
         </VStack>
 
         {game.background_image ? (
@@ -256,6 +286,13 @@ const GameCard = ({ game }: Props) => {
         game={game}
         isOpen={isDetailsOpen}
         onClose={onDetailsClose}
+      />
+
+      {/* Add to List Modal */}
+      <AddToListModal
+        game={game}
+        isOpen={isAddToListOpen}
+        onClose={onAddToListClose}
       />
     </>
   );

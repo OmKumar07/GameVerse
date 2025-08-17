@@ -23,15 +23,27 @@ import {
   IconButton,
   useToast,
   Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { FiHeart, FiCalendar, FiEdit3, FiStar, FiX } from "react-icons/fi";
+import {
+  FiHeart,
+  FiCalendar,
+  FiEdit3,
+  FiStar,
+  FiX,
+  FiPlus,
+  FiList,
+} from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { FaHeart, FaPlay, FaCheck } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useFavorites } from "../../hooks/useFavorites";
 import { usePlayedGames } from "../../hooks/usePlayedGames";
 import { useRecommendations } from "../../hooks/useRecommendations";
+import { useCustomLists } from "../../hooks/useCustomLists";
 import EditProfileModal from "./EditProfileModal";
+import CreateListModal from "../lists/CreateListModal";
+import ListCard from "../lists/ListCard";
 
 const UserDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -49,9 +61,15 @@ const UserDashboard: React.FC = () => {
     isPlayed,
     isLoading: playedLoading,
   } = usePlayedGames();
+  const { lists } = useCustomLists();
   const { recommendations, isLoading: recommendationsLoading } =
     useRecommendations();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const {
+    isOpen: isCreateListOpen,
+    onOpen: onCreateListOpen,
+    onClose: onCreateListClose,
+  } = useDisclosure();
   const toast = useToast();
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
@@ -310,7 +328,7 @@ const UserDashboard: React.FC = () => {
           </Card>
 
           {/* Stats Grid */}
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
             <Card bg={cardBg} border="1px" borderColor={borderColor}>
               <CardBody>
                 <Stat>
@@ -331,6 +349,18 @@ const UserDashboard: React.FC = () => {
                     <StatLabel>Games Played</StatLabel>
                   </HStack>
                   <StatNumber color="blue.400">{playedGames.length}</StatNumber>
+                </Stat>
+              </CardBody>
+            </Card>
+
+            <Card bg={cardBg} border="1px" borderColor={borderColor}>
+              <CardBody>
+                <Stat>
+                  <HStack>
+                    <FiList color="purple.400" size={20} />
+                    <StatLabel>Custom Lists</StatLabel>
+                  </HStack>
+                  <StatNumber color="purple.400">{lists.length}</StatNumber>
                 </Stat>
               </CardBody>
             </Card>
@@ -745,12 +775,81 @@ const UserDashboard: React.FC = () => {
               </VStack>
             </CardBody>
           </Card>
+
+          {/* Custom Lists Section */}
+          <Card bg={cardBg} border="1px" borderColor={borderColor}>
+            <CardBody>
+              <VStack align="stretch" spacing={4}>
+                <HStack justify="space-between" align="center">
+                  <HStack spacing={3}>
+                    <Icon as={FiList} color="purple.400" boxSize={6} />
+                    <Text fontSize="xl" fontWeight="bold">
+                      My Lists
+                    </Text>
+                    <Badge colorScheme="purple" variant="subtle">
+                      {lists.length}
+                    </Badge>
+                  </HStack>
+                  <Button
+                    leftIcon={<FiPlus />}
+                    colorScheme="purple"
+                    variant="outline"
+                    size="sm"
+                    onClick={onCreateListOpen}
+                  >
+                    Create List
+                  </Button>
+                </HStack>
+
+                {lists.length === 0 ? (
+                  <Box
+                    textAlign="center"
+                    py={8}
+                    border="2px dashed"
+                    borderColor="gray.300"
+                    borderRadius="md"
+                    bg="gray.50"
+                  >
+                    <VStack spacing={3}>
+                      <Icon as={FiList} boxSize={12} color="gray.400" />
+                      <Text color="gray.500" fontSize="lg" fontWeight="medium">
+                        No custom lists yet
+                      </Text>
+                      <Text color="gray.400" fontSize="sm">
+                        Create your first list to organize your games
+                      </Text>
+                      <Button
+                        leftIcon={<FiPlus />}
+                        colorScheme="purple"
+                        size="sm"
+                        onClick={onCreateListOpen}
+                      >
+                        Create Your First List
+                      </Button>
+                    </VStack>
+                  </Box>
+                ) : (
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+                    {lists.map((list) => (
+                      <ListCard key={list.id} list={list} />
+                    ))}
+                  </SimpleGrid>
+                )}
+              </VStack>
+            </CardBody>
+          </Card>
         </VStack>
 
         {/* Edit Profile Modal */}
         <EditProfileModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
+        />
+
+        {/* Create List Modal */}
+        <CreateListModal
+          isOpen={isCreateListOpen}
+          onClose={onCreateListClose}
         />
       </Container>
     </Box>
