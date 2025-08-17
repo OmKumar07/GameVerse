@@ -13,6 +13,12 @@ const NavBar = ({ onSearch }: Props) => {
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const shadowColor = useColorModeValue("md", "dark-lg");
 
+  const handleNavigateHome = () => {
+    // Navigate to homepage
+    window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   return (
     <Box
       bg={bgColor}
@@ -34,7 +40,13 @@ const NavBar = ({ onSearch }: Props) => {
         mx="auto"
         justify="space-between"
       >
-        <HStack spacing={4}>
+        <HStack
+          spacing={4}
+          cursor="pointer"
+          onClick={handleNavigateHome}
+          _hover={{ opacity: 0.8 }}
+          transition="opacity 0.2s"
+        >
           <Image
             src={logo}
             boxSize="50px"
