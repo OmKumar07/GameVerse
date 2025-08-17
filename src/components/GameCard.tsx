@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
 import { usePlayedGames } from "@/hooks/usePlayedGames";
 import AuthModal from "./auth/AuthModal";
+import GameDetailsModal from "./GameDetailsModal";
 
 interface Props {
   game: Game;
@@ -33,8 +34,17 @@ const GameCard = ({ game }: Props) => {
     removeFromPlayed,
     isLoading: playedLoading,
   } = usePlayedGames();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure(); // For auth modal
+  const { 
+    isOpen: isDetailsOpen, 
+    onOpen: onDetailsOpen, 
+    onClose: onDetailsClose 
+  } = useDisclosure(); // For game details modal
   const toast = useToast();
+
+  const handleCardClick = () => {
+    onDetailsOpen();
+  };
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent event bubbling
@@ -121,6 +131,8 @@ const GameCard = ({ game }: Props) => {
         overflow="hidden"
         bg="gray.700"
         position="relative"
+        cursor="pointer"
+        onClick={handleCardClick}
         _hover={{
           transform: "scale(1.03)",
           transition: "transform .15s ease-in",
@@ -213,6 +225,13 @@ const GameCard = ({ game }: Props) => {
 
       {/* Auth Modal for non-authenticated users */}
       <AuthModal isOpen={isOpen} onClose={onClose} initialMode="login" />
+      
+      {/* Game Details Modal */}
+      <GameDetailsModal 
+        game={game} 
+        isOpen={isDetailsOpen} 
+        onClose={onDetailsClose} 
+      />
     </>
   );
 };
