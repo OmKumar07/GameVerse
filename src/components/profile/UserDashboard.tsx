@@ -42,7 +42,13 @@ const UserDashboard: React.FC = () => {
     isLoading,
     isFavorite,
   } = useFavorites();
-  const { playedGames, removeFromPlayed, addToPlayed, isPlayed, isLoading: playedLoading } = usePlayedGames();
+  const {
+    playedGames,
+    removeFromPlayed,
+    addToPlayed,
+    isPlayed,
+    isLoading: playedLoading,
+  } = usePlayedGames();
   const { recommendations, isLoading: recommendationsLoading } =
     useRecommendations();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -122,7 +128,7 @@ const UserDashboard: React.FC = () => {
     try {
       await addToPlayed(game);
       toast({
-        title: "Marked as played",
+        title: "Added to played games",
         description: `${game.name} has been marked as played`,
         status: "success",
         duration: 2000,
@@ -131,7 +137,7 @@ const UserDashboard: React.FC = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to mark as played. Please try again.",
+        description: "Failed to add to played games. Please try again.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -324,9 +330,7 @@ const UserDashboard: React.FC = () => {
                     <IoGameControllerOutline color="blue.400" size={20} />
                     <StatLabel>Games Played</StatLabel>
                   </HStack>
-                  <StatNumber color="blue.400">
-                    {playedGames.length}
-                  </StatNumber>
+                  <StatNumber color="blue.400">{playedGames.length}</StatNumber>
                 </Stat>
               </CardBody>
             </Card>
@@ -411,7 +415,13 @@ const UserDashboard: React.FC = () => {
                         }}
                       >
                         <CardBody p={0}>
-                          <VStack position="absolute" top={2} right={2} spacing={1} zIndex={2}>
+                          <VStack
+                            position="absolute"
+                            top={2}
+                            right={2}
+                            spacing={1}
+                            zIndex={2}
+                          >
                             <Tooltip label="Add to favorites" fontSize="sm">
                               <IconButton
                                 aria-label="Add to favorites"
@@ -521,7 +531,7 @@ const UserDashboard: React.FC = () => {
                   )}
                 </HStack>
                 <Divider />
-                
+
                 {playedGames.length === 0 ? (
                   <Box textAlign="center" py={8} w="100%">
                     <IoGameControllerOutline size={48} color="gray.300" />
@@ -533,12 +543,30 @@ const UserDashboard: React.FC = () => {
                     </Text>
                   </Box>
                 ) : (
-                  <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 6 }} spacing={4} w="100%">
+                  <SimpleGrid
+                    columns={{ base: 1, sm: 2, md: 3, lg: 6 }}
+                    spacing={4}
+                    w="100%"
+                  >
                     {playedGames.slice(0, 6).map((game) => (
-                      <Card key={game.id} bg={cardBg} border="1px" borderColor={borderColor} position="relative" _hover={{ transform: "scale(1.02)", transition: "transform 0.2s" }}>
+                      <Card
+                        key={game.id}
+                        bg={cardBg}
+                        border="1px"
+                        borderColor={borderColor}
+                        position="relative"
+                        _hover={{
+                          transform: "scale(1.02)",
+                          transition: "transform 0.2s",
+                        }}
+                      >
                         <CardBody p={0}>
                           {/* Remove from played button */}
-                          <Tooltip label="Remove from played games" placement="top" hasArrow>
+                          <Tooltip
+                            label="Remove from played games"
+                            placement="top"
+                            hasArrow
+                          >
                             <IconButton
                               aria-label="Remove from played games"
                               icon={<FiX color="#E53E3E" />}
@@ -551,10 +579,12 @@ const UserDashboard: React.FC = () => {
                               _hover={{ bg: "blackAlpha.800" }}
                               borderRadius="full"
                               isLoading={playedLoading}
-                              onClick={() => handleRemoveFromPlayed(game.id, game.name)}
+                              onClick={() =>
+                                handleRemoveFromPlayed(game.id, game.name)
+                              }
                             />
                           </Tooltip>
-                          
+
                           {/* Game Image */}
                           {game.background_image ? (
                             <Image
@@ -566,18 +596,36 @@ const UserDashboard: React.FC = () => {
                               borderTopRadius="md"
                             />
                           ) : (
-                            <Box height="120px" bg="gray.700" borderTopRadius="md" display="flex" alignItems="center" justifyContent="center">
-                              <IoGameControllerOutline size={32} color="gray.400" />
+                            <Box
+                              height="120px"
+                              bg="gray.700"
+                              borderTopRadius="md"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                            >
+                              <IoGameControllerOutline
+                                size={32}
+                                color="gray.400"
+                              />
                             </Box>
                           )}
-                          
+
                           {/* Game Info */}
                           <Box p={3}>
-                            <Text fontSize="sm" fontWeight="medium" noOfLines={2} title={game.name}>
+                            <Text
+                              fontSize="sm"
+                              fontWeight="medium"
+                              noOfLines={2}
+                              title={game.name}
+                            >
                               {game.name}
                             </Text>
                             <Text fontSize="xs" color="green.500" mt={1}>
-                              Status: {game.status === "completed" ? "Played" : game.status || "Played"}
+                              Status:{" "}
+                              {game.status === "completed"
+                                ? "Played"
+                                : game.status || "Played"}
                             </Text>
                           </Box>
                         </CardBody>

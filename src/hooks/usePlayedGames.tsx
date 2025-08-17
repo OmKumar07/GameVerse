@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { Game } from "./useGames";
 import { useAuth } from "./useAuth";
 import apiClient from "../services/auth-api-client";
@@ -34,7 +40,9 @@ interface PlayedGamesProviderProps {
   children: ReactNode;
 }
 
-export const PlayedGamesProvider: React.FC<PlayedGamesProviderProps> = ({ children }) => {
+export const PlayedGamesProvider: React.FC<PlayedGamesProviderProps> = ({
+  children,
+}) => {
   const [playedGames, setPlayedGames] = useState<PlayedGame[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated, user } = useAuth();
@@ -53,22 +61,23 @@ export const PlayedGamesProvider: React.FC<PlayedGamesProviderProps> = ({ childr
       setIsLoading(true);
       const token = localStorage.getItem("authToken");
       const response = await apiClient.get("/users/played-games", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       // Convert backend format to frontend format
-      const played = response.data.playedGames?.map((playedGame: any) => ({
-        id: playedGame.gameId,
-        name: playedGame.gameName,
-        background_image: playedGame.gameImage,
-        parent_platforms: [],
-        metacritic: null,
-        status: playedGame.status,
-        addedAt: playedGame.addedAt,
-        rating: playedGame.rating,
-        hoursPlayed: playedGame.hoursPlayed
-      })) || [];
-      
+      const played =
+        response.data.playedGames?.map((playedGame: any) => ({
+          id: playedGame.gameId,
+          name: playedGame.gameName,
+          background_image: playedGame.gameImage,
+          parent_platforms: [],
+          metacritic: null,
+          status: playedGame.status,
+          addedAt: playedGame.addedAt,
+          rating: playedGame.rating,
+          hoursPlayed: playedGame.hoursPlayed,
+        })) || [];
+
       setPlayedGames(played);
     } catch (error) {
       console.error("Failed to load played games:", error);
@@ -79,11 +88,11 @@ export const PlayedGamesProvider: React.FC<PlayedGamesProviderProps> = ({ childr
   };
 
   const isPlayed = (gameId: number): boolean => {
-    return playedGames.some(game => game.id === gameId);
+    return playedGames.some((game) => game.id === gameId);
   };
 
   const getGameStatus = (gameId: number): string | null => {
-    const game = playedGames.find(game => game.id === gameId);
+    const game = playedGames.find((game) => game.id === gameId);
     return game?.status || null;
   };
 
@@ -91,22 +100,29 @@ export const PlayedGamesProvider: React.FC<PlayedGamesProviderProps> = ({ childr
     try {
       setIsLoading(true);
       const token = localStorage.getItem("authToken");
-      await apiClient.post("/users/played-games", { 
-        gameId: game.id,
-        gameName: game.name,
-        gameImage: game.background_image || "",
-        status
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
+      await apiClient.post(
+        "/users/played-games",
+        {
+          gameId: game.id,
+          gameName: game.name,
+          gameImage: game.background_image || "",
+          status,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       const newPlayedGame: PlayedGame = {
         ...game,
         status: status as any,
-        addedAt: new Date().toISOString()
+        addedAt: new Date().toISOString(),
       };
-      
-      setPlayedGames(prev => [...prev.filter(g => g.id !== game.id), newPlayedGame]);
+
+      setPlayedGames((prev) => [
+        ...prev.filter((g) => g.id !== game.id),
+        newPlayedGame,
+      ]);
     } catch (error) {
       console.error("Failed to add to played games:", error);
       throw error;
@@ -120,10 +136,10 @@ export const PlayedGamesProvider: React.FC<PlayedGamesProviderProps> = ({ childr
       setIsLoading(true);
       const token = localStorage.getItem("authToken");
       await apiClient.delete(`/users/played-games/${gameId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      
-      setPlayedGames(prev => prev.filter(game => game.id !== gameId));
+
+      setPlayedGames((prev) => prev.filter((game) => game.id !== gameId));
     } catch (error) {
       console.error("Failed to remove from played games:", error);
       throw error;
@@ -135,22 +151,26 @@ export const PlayedGamesProvider: React.FC<PlayedGamesProviderProps> = ({ childr
   const updateGameStatus = async (gameId: number, status: string) => {
     try {
       setIsLoading(true);
-      const game = playedGames.find(g => g.id === gameId);
+      const game = playedGames.find((g) => g.id === gameId);
       if (!game) throw new Error("Game not found in played list");
-      
+
       const token = localStorage.getItem("authToken");
-      await apiClient.post("/users/played-games", { 
-        gameId: game.id,
-        gameName: game.name,
-        gameImage: game.background_image || "",
-        status
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      setPlayedGames(prev => prev.map(g => 
-        g.id === gameId ? { ...g, status: status as any } : g
-      ));
+      await apiClient.post(
+        "/users/played-games",
+        {
+          gameId: game.id,
+          gameName: game.name,
+          gameImage: game.background_image || "",
+          status,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setPlayedGames((prev) =>
+        prev.map((g) => (g.id === gameId ? { ...g, status: status as any } : g))
+      );
     } catch (error) {
       console.error("Failed to update game status:", error);
       throw error;
@@ -166,7 +186,7 @@ export const PlayedGamesProvider: React.FC<PlayedGamesProviderProps> = ({ childr
     addToPlayed,
     removeFromPlayed,
     updateGameStatus,
-    isLoading
+    isLoading,
   };
 
   return (

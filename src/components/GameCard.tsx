@@ -27,8 +27,12 @@ const GameCard = ({ game }: Props) => {
   const { isAuthenticated } = useAuth();
   const { isFavorite, addToFavorites, removeFromFavorites, isLoading } =
     useFavorites();
-  const { isPlayed, addToPlayed, removeFromPlayed, isLoading: playedLoading } =
-    usePlayedGames();
+  const {
+    isPlayed,
+    addToPlayed,
+    removeFromPlayed,
+    isLoading: playedLoading,
+  } = usePlayedGames();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -126,13 +130,17 @@ const GameCard = ({ game }: Props) => {
         <VStack position="absolute" top={3} right={3} zIndex={2} spacing={2}>
           {/* Favorite Heart Icon */}
           <Tooltip
-            label={isFavorite(game.id) ? "Remove from favorites" : "Add to favorites"}
+            label={
+              isFavorite(game.id) ? "Remove from favorites" : "Add to favorites"
+            }
             placement="top"
             hasArrow
           >
             <IconButton
               aria-label={
-                isFavorite(game.id) ? "Remove from favorites" : "Add to favorites"
+                isFavorite(game.id)
+                  ? "Remove from favorites"
+                  : "Add to favorites"
               }
               icon={
                 isFavorite(game.id) ? (
@@ -152,12 +160,18 @@ const GameCard = ({ game }: Props) => {
 
           {/* Played Game Icon */}
           <Tooltip
-            label={isPlayed(game.id) ? "Remove from played games" : "Mark as played"}
+            label={
+              isPlayed(game.id) ? "Remove from played games" : "Mark as played"
+            }
             placement="top"
             hasArrow
           >
             <IconButton
-              aria-label={isPlayed(game.id) ? "Remove from played games" : "Mark as played"}
+              aria-label={
+                isPlayed(game.id)
+                  ? "Remove from played games"
+                  : "Mark as played"
+              }
               icon={
                 isPlayed(game.id) ? (
                   <FaCheck color="#38A169" />
