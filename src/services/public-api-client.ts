@@ -1,4 +1,4 @@
-import apiClient from "./api-client";
+import apiClient from "./auth-api-client";
 
 export interface PublicUser {
   stats: any;
@@ -169,17 +169,6 @@ class PublicApiClient {
     const response = await apiClient.get<PublicListDetailsResponse>(
       `/public/users/${identifier}/lists/${listId}`
     );
-    return response.data;
-  };
-
-  // Get trending users
-  getTrendingUsers = async (
-    limit: number = 10
-  ): Promise<{ success: boolean; data: PublicUser[] }> => {
-    const response = await apiClient.get<{
-      success: boolean;
-      data: PublicUser[];
-    }>(`/public/users/trending?limit=${limit}`);
     return response.data;
   };
 }

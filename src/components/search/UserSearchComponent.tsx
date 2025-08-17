@@ -25,23 +25,13 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
-import { useUserSearch, useTrendingUsers } from "../../hooks/useUserSearch";
+import { useUserSearch } from "../../hooks/useUserSearch";
 
 const UserSearchComponent = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const { users, isLoading, error, pagination, searchUsers, clearSearch } =
     useUserSearch();
-  const {
-    trendingUsers,
-    isLoading: isLoadingTrending,
-    fetchTrendingUsers,
-  } = useTrendingUsers();
-
-  // Fetch trending users on component mount
-  useEffect(() => {
-    fetchTrendingUsers();
-  }, []);
 
   // Debounce search query
   useEffect(() => {
@@ -149,7 +139,7 @@ const UserSearchComponent = () => {
             />
           </InputGroup>
 
-          {/* Search Results or Trending Users */}
+          {/* Search Results */}
           {debouncedQuery.trim().length >= 2 ? (
             <Box>
               <Heading size="sm" mb={4}>
@@ -207,24 +197,10 @@ const UserSearchComponent = () => {
             </Box>
           ) : (
             <Box>
-              <Heading size="sm" mb={4}>
-                Popular Users
-              </Heading>
-
-              {isLoadingTrending ? (
-                <Flex justify="center" py={8}>
-                  <Spinner size="lg" />
-                </Flex>
-              ) : trendingUsers.length === 0 ? (
-                <Alert status="info">
-                  <AlertIcon />
-                  No users available.
-                </Alert>
-              ) : (
-                <VStack spacing={4}>
-                  {trendingUsers.slice(0, 3).map(renderUserCard)}
-                </VStack>
-              )}
+              <Alert status="info">
+                <AlertIcon />
+                Start typing to search for users (minimum 2 characters)
+              </Alert>
             </Box>
           )}
         </VStack>
