@@ -1,4 +1,9 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
+
+interface ExtendedAxiosInstance extends AxiosInstance {
+  updateProfile: (updates: any) => Promise<any>;
+  getProfile: () => Promise<any>;
+}
 
 // Create API client for backend
 const API_BASE_URL =
@@ -13,7 +18,7 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-});
+}) as ExtendedAxiosInstance;
 
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
@@ -67,5 +72,14 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Add custom methods to the API client
+apiClient.updateProfile = async (updates: any) => {
+  return apiClient.put("/auth/profile", updates);
+};
+
+apiClient.getProfile = async () => {
+  return apiClient.get("/auth/profile");
+};
 
 export default apiClient;

@@ -1,4 +1,12 @@
-import { Box, HStack, Image, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Image,
+  Text,
+  useColorModeValue,
+  Button,
+  ButtonGroup,
+} from "@chakra-ui/react";
 import logo from "../assets/logo.webp";
 import ColorModeSwitch from "./ui/ColorModeSwitch";
 import SearchInput from "./SearchInput";
@@ -16,6 +24,18 @@ const NavBar = ({ onSearch }: Props) => {
   const handleNavigateHome = () => {
     // Navigate to homepage
     window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
+  const handleNavigateDashboard = () => {
+    // Navigate to dashboard
+    window.history.pushState({}, "", "/dashboard");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
+  const handleNavigateUsers = () => {
+    // Navigate to user search
+    window.history.pushState({}, "", "/users");
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
 
@@ -71,6 +91,15 @@ const NavBar = ({ onSearch }: Props) => {
         </Box>
 
         <HStack spacing={4}>
+          <ButtonGroup
+            size="sm"
+            variant="ghost"
+            display={{ base: "none", md: "flex" }}
+          >
+            <Button onClick={handleNavigateHome}>Games</Button>
+            <Button onClick={handleNavigateUsers}>Users</Button>
+            <Button onClick={handleNavigateDashboard}>Dashboard</Button>
+          </ButtonGroup>
           <ColorModeSwitch />
           <ProfileMenu />
         </HStack>

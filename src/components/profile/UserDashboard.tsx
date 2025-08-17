@@ -44,6 +44,7 @@ import { useCustomLists } from "../../hooks/useCustomLists";
 import EditProfileModal from "./EditProfileModal";
 import CreateListModal from "../lists/CreateListModal";
 import ListCard from "../lists/ListCard";
+import PrivacySettingsCard from "./PrivacySettingsCard";
 
 const UserDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -838,6 +839,9 @@ const UserDashboard: React.FC = () => {
               </VStack>
             </CardBody>
           </Card>
+
+          {/* Privacy Settings */}
+          <PrivacySettingsCard />
         </VStack>
 
         {/* Edit Profile Modal */}

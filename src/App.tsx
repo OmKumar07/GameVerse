@@ -9,6 +9,8 @@ import { AuthProvider } from "./hooks/useAuth";
 import { FavoritesProvider } from "./hooks/useFavorites";
 import { PlayedGamesProvider } from "./hooks/usePlayedGames";
 import DashboardPage from "./pages/DashboardPage";
+import UserSearchPage from "./pages/UserSearchPage";
+import PublicProfilePage from "./pages/PublicProfilePage";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<Genre>();
@@ -36,6 +38,11 @@ function App() {
 
     if (currentRoute === "/dashboard") {
       title = "Dashboard - GameVerse";
+    } else if (currentRoute === "/users") {
+      title = "Discover Users - GameVerse";
+    } else if (currentRoute.startsWith("/user/")) {
+      const username = currentRoute.split("/user/")[1];
+      title = `${username} - GameVerse`;
     } else if (searchText) {
       title = `"${searchText}" - GameVerse`;
     } else if (selectedGenre) {
@@ -58,6 +65,38 @@ function App() {
             <Box minH="100vh" bg={bgColor}>
               <NavBar onSearch={setSearchText} />
               <DashboardPage />
+            </Box>
+          </PlayedGamesProvider>
+        </FavoritesProvider>
+      </AuthProvider>
+    );
+  }
+
+  // Render user search page
+  if (currentRoute === "/users") {
+    return (
+      <AuthProvider>
+        <FavoritesProvider>
+          <PlayedGamesProvider>
+            <Box minH="100vh" bg={bgColor}>
+              <NavBar onSearch={setSearchText} />
+              <UserSearchPage />
+            </Box>
+          </PlayedGamesProvider>
+        </FavoritesProvider>
+      </AuthProvider>
+    );
+  }
+
+  // Render public profile page
+  if (currentRoute.startsWith("/user/")) {
+    return (
+      <AuthProvider>
+        <FavoritesProvider>
+          <PlayedGamesProvider>
+            <Box minH="100vh" bg={bgColor}>
+              <NavBar onSearch={setSearchText} />
+              <PublicProfilePage />
             </Box>
           </PlayedGamesProvider>
         </FavoritesProvider>

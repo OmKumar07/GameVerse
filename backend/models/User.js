@@ -217,6 +217,26 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    showFavoriteGames: {
+      type: Boolean,
+      default: true,
+    },
+    showPlayedGames: {
+      type: Boolean,
+      default: true,
+    },
+    showCustomLists: {
+      type: Boolean,
+      default: true,
+    },
+    showBio: {
+      type: Boolean,
+      default: true,
+    },
+    showLocation: {
+      type: Boolean,
+      default: true,
+    },
 
     // Account Status
     isActive: {
@@ -399,7 +419,7 @@ userSchema.methods.removeGameFromList = function (listId, gameId) {
 };
 
 // Get user's public profile
-userSchema.methods.getPublicProfile = function () {
+userSchema.methods.getPublicProfile = function (viewerUserId = null) {
   const publicProfile = this.toObject();
 
   // Remove sensitive information
@@ -409,9 +429,70 @@ userSchema.methods.getPublicProfile = function () {
   delete publicProfile.emailVerificationToken;
   delete publicProfile.emailVerificationExpires;
 
-  // Conditionally remove email based on privacy settings
+  // Check if profile is private
+  if (publicProfile.profilePrivacy === "private") {
+    // Only show basic info for private profiles
+    return {
+      _id: publicProfile._id,
+      username: publicProfile.username,
+      displayName: publicProfile.displayName,
+      profileImage: publicProfile.profileImage,
+      profilePrivacy: publicProfile.profilePrivacy,
+      isPrivate: true,
+    };
+  }
+
+  // For friends-only profiles, check if viewer is a friend (simplified for now)
+  if (publicProfile.profilePrivacy === "friends" && viewerUserId) {
+    const isFriend =
+      publicProfile.followers.includes(viewerUserId) ||
+      publicProfile.following.includes(viewerUserId);
+    if (!isFriend) {
+      return {
+        _id: publicProfile._id,
+        username: publicProfile.username,
+        displayName: publicProfile.displayName,
+        profileImage: publicProfile.profileImage,
+        profilePrivacy: publicProfile.profilePrivacy,
+        isFriendsOnly: true,
+      };
+    }
+  }
+
+  // Apply privacy settings for public profiles
   if (!publicProfile.showEmail) {
     delete publicProfile.email;
+  }
+
+  if (!publicProfile.showBio) {
+    delete publicProfile.bio;
+  }
+
+  if (!publicProfile.showLocation) {
+    delete publicProfile.location;
+  }
+
+  if (!publicProfile.showGameStats) {
+    delete publicProfile.totalGamesPlayed;
+    delete publicProfile.totalHoursPlayed;
+    delete publicProfile.achievementsUnlocked;
+  }
+
+  if (!publicProfile.showFavoriteGames) {
+    delete publicProfile.favoriteGames;
+  }
+
+  if (!publicProfile.showPlayedGames) {
+    delete publicProfile.playedGames;
+  }
+
+  if (!publicProfile.showCustomLists) {
+    publicProfile.customLists = [];
+  } else {
+    // Only show public custom lists
+    publicProfile.customLists = publicProfile.customLists.filter(
+      (list) => list.isPublic
+    );
   }
 
   return publicProfile;

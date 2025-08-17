@@ -12,6 +12,7 @@ interface AuthContextType extends AuthState {
   ) => Promise<void>;
   logout: () => void;
   updateProfile: (updates: Partial<User>) => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -114,6 +115,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const response = await apiClient.getProfile();
+      const updatedUser = response.data.user;
+      setAuthState((prev) => ({ ...prev, user: updatedUser }));
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error("Failed to refresh user:", error);
+    }
+  };
+
   // Check for existing user on mount
   React.useEffect(() => {
     const checkAuthStatus = async () => {
@@ -156,6 +168,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signup,
     logout,
     updateProfile,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -36,6 +36,11 @@ export interface User {
   profilePrivacy?: "public" | "friends" | "private";
   showEmail?: boolean;
   showGameStats?: boolean;
+  showFavoriteGames?: boolean;
+  showPlayedGames?: boolean;
+  showCustomLists?: boolean;
+  showBio?: boolean;
+  showLocation?: boolean;
   isActive?: boolean;
   isVerified?: boolean;
   lastLoginAt?: string;

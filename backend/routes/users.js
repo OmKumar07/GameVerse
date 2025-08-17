@@ -48,6 +48,11 @@ router.put("/profile", auth, async (req, res) => {
       profilePrivacy,
       showEmail,
       showGameStats,
+      showFavoriteGames,
+      showPlayedGames,
+      showCustomLists,
+      showBio,
+      showLocation,
     } = req.body;
 
     const user = await User.findById(req.user.userId);
@@ -69,6 +74,12 @@ router.put("/profile", auth, async (req, res) => {
     if (profilePrivacy !== undefined) user.profilePrivacy = profilePrivacy;
     if (showEmail !== undefined) user.showEmail = showEmail;
     if (showGameStats !== undefined) user.showGameStats = showGameStats;
+    if (showFavoriteGames !== undefined)
+      user.showFavoriteGames = showFavoriteGames;
+    if (showPlayedGames !== undefined) user.showPlayedGames = showPlayedGames;
+    if (showCustomLists !== undefined) user.showCustomLists = showCustomLists;
+    if (showBio !== undefined) user.showBio = showBio;
+    if (showLocation !== undefined) user.showLocation = showLocation;
 
     await user.save();
 
