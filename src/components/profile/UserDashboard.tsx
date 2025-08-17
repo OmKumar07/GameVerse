@@ -23,16 +23,25 @@ import {
   IconButton,
   useToast,
 } from "@chakra-ui/react";
-import { FiHeart, FiCalendar, FiEdit3 } from "react-icons/fi";
+import { FiHeart, FiCalendar, FiEdit3, FiStar } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useFavorites } from "../../hooks/useFavorites";
+import { useRecommendations } from "../../hooks/useRecommendations";
 import EditProfileModal from "./EditProfileModal";
 
 const UserDashboard: React.FC = () => {
   const { user } = useAuth();
-  const { favorites, removeFromFavorites, isLoading } = useFavorites();
+  const {
+    favorites,
+    removeFromFavorites,
+    addToFavorites,
+    isLoading,
+    isFavorite,
+  } = useFavorites();
+  const { recommendations, isLoading: recommendationsLoading } =
+    useRecommendations();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const toast = useToast();
   const bgColor = useColorModeValue("gray.50", "gray.900");
@@ -57,6 +66,27 @@ const UserDashboard: React.FC = () => {
       toast({
         title: "Error",
         description: "Failed to remove from favorites. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleAddToFavorites = async (game: any) => {
+    try {
+      await addToFavorites(game);
+      toast({
+        title: "Added to favorites",
+        description: `${game.name} has been added to your favorites`,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add to favorites. Please try again.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -274,23 +304,141 @@ const UserDashboard: React.FC = () => {
             </Card>
           </SimpleGrid>
 
-          {/* Recent Activity Section */}
+          {/* Recommended Games Section */}
           <Card bg={cardBg} border="1px" borderColor={borderColor}>
             <CardBody>
               <VStack align="start" spacing={4}>
-                <Text fontSize="lg" fontWeight="semibold">
-                  Recent Activity
-                </Text>
+                <HStack justify="space-between" w="100%">
+                  <Text fontSize="lg" fontWeight="semibold">
+                    Recommended for You
+                  </Text>
+                  {recommendations.length > 0 && (
+                    <Text fontSize="sm" color="gray.500">
+                      Based on your favorites
+                    </Text>
+                  )}
+                </HStack>
                 <Divider />
-                <Box textAlign="center" py={8}>
-                  <IoGameControllerOutline size={48} color="gray.300" />
-                  <Text color="gray.500" fontSize="lg" mt={4}>
-                    No recent activity
-                  </Text>
-                  <Text color="gray.400" fontSize="sm">
-                    Start exploring games to see your activity here!
-                  </Text>
-                </Box>
+
+                {recommendationsLoading ? (
+                  <Box textAlign="center" py={8} w="100%">
+                    <Text color="gray.500" fontSize="lg">
+                      Finding games you might like...
+                    </Text>
+                  </Box>
+                ) : favorites.length === 0 ? (
+                  <Box textAlign="center" py={8} w="100%">
+                    <IoGameControllerOutline size={48} color="gray.300" />
+                    <Text color="gray.500" fontSize="lg" mt={4}>
+                      No recommendations yet
+                    </Text>
+                    <Text color="gray.400" fontSize="sm">
+                      Add some games to your favorites to get personalized
+                      recommendations!
+                    </Text>
+                  </Box>
+                ) : recommendations.length === 0 ? (
+                  <Box textAlign="center" py={8} w="100%">
+                    <IoGameControllerOutline size={48} color="gray.300" />
+                    <Text color="gray.500" fontSize="lg" mt={4}>
+                      No new recommendations
+                    </Text>
+                    <Text color="gray.400" fontSize="sm">
+                      You've discovered most games in your favorite genres!
+                    </Text>
+                  </Box>
+                ) : (
+                  <SimpleGrid
+                    columns={{ base: 1, sm: 2, md: 3, lg: 6 }}
+                    spacing={4}
+                    w="100%"
+                  >
+                    {recommendations.map((game) => (
+                      <Card
+                        key={game.id}
+                        bg={cardBg}
+                        border="1px"
+                        borderColor={borderColor}
+                        position="relative"
+                        _hover={{
+                          transform: "scale(1.02)",
+                          transition: "transform 0.2s",
+                        }}
+                      >
+                        <CardBody p={0}>
+                          {/* Add to favorites button */}
+                          <IconButton
+                            aria-label="Add to favorites"
+                            icon={
+                              isFavorite(game.id) ? (
+                                <FaHeart color="#E53E3E" />
+                              ) : (
+                                <FiHeart color="white" />
+                              )
+                            }
+                            position="absolute"
+                            top={2}
+                            right={2}
+                            zIndex={2}
+                            size="sm"
+                            bg="blackAlpha.600"
+                            _hover={{ bg: "blackAlpha.800" }}
+                            borderRadius="full"
+                            isLoading={isLoading}
+                            onClick={() =>
+                              isFavorite(game.id)
+                                ? handleRemoveFavorite(game.id, game.name)
+                                : handleAddToFavorites(game)
+                            }
+                          />
+
+                          {/* Game Image */}
+                          {game.background_image ? (
+                            <Image
+                              src={game.background_image}
+                              alt={game.name}
+                              height="120px"
+                              objectFit="cover"
+                              width="100%"
+                              borderTopRadius="md"
+                            />
+                          ) : (
+                            <Box
+                              height="120px"
+                              bg="gray.700"
+                              borderTopRadius="md"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                            >
+                              <IoGameControllerOutline
+                                size={32}
+                                color="gray.400"
+                              />
+                            </Box>
+                          )}
+
+                          {/* Game Info */}
+                          <Box p={3}>
+                            <Text
+                              fontSize="sm"
+                              fontWeight="medium"
+                              noOfLines={2}
+                              title={game.name}
+                            >
+                              {game.name}
+                            </Text>
+                            {game.metacritic && (
+                              <Text fontSize="xs" color="green.500" mt={1}>
+                                Score: {game.metacritic}
+                              </Text>
+                            )}
+                          </Box>
+                        </CardBody>
+                      </Card>
+                    ))}
+                  </SimpleGrid>
+                )}
               </VStack>
             </CardBody>
           </Card>
