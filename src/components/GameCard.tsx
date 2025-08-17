@@ -9,6 +9,7 @@ import {
   useDisclosure,
   useToast,
   Tooltip,
+  Text,
 } from "@chakra-ui/react";
 import React from "react";
 import PlatformIconList from "./PlatformIconList";
@@ -136,7 +137,9 @@ const GameCard = ({ game }: Props) => {
         _hover={{
           transform: "scale(1.03)",
           transition: "transform .15s ease-in",
+          boxShadow: "lg",
         }}
+        transition="all 0.2s"
       >
         {/* Action Icons */}
         <VStack position="absolute" top={3} right={3} zIndex={2} spacing={2}>
@@ -220,6 +223,28 @@ const GameCard = ({ game }: Props) => {
             <CriticScore score={game.metacritic} />
           </HStack>
           <Heading fontSize="2xl">{game.name}</Heading>
+        </Box>
+        
+        {/* Click hint overlay on hover */}
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          bg="blackAlpha.600"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          opacity={0}
+          _hover={{ opacity: 1 }}
+          transition="opacity 0.2s"
+          borderRadius={10}
+          pointerEvents="none"
+        >
+          <Text color="white" fontSize="lg" fontWeight="bold">
+            Click for details
+          </Text>
         </Box>
       </Box>
 
