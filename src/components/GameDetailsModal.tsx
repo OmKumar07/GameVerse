@@ -30,7 +30,15 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { Game } from "@/hooks/useGames";
-import { FaHeart, FaPlay, FaCheck, FaExternalLinkAlt, FaCalendarAlt, FaStar, FaGamepad } from "react-icons/fa";
+import {
+  FaHeart,
+  FaPlay,
+  FaCheck,
+  FaExternalLinkAlt,
+  FaCalendarAlt,
+  FaStar,
+  FaGamepad,
+} from "react-icons/fa";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -56,9 +64,14 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
     fetchScreenshots,
     clearGameDetails,
   } = useGameDetails();
-  
+
   const { isAuthenticated } = useAuth();
-  const { isFavorite, addToFavorites, removeFromFavorites, isLoading: favLoading } = useFavorites();
+  const {
+    isFavorite,
+    addToFavorites,
+    removeFromFavorites,
+    isLoading: favLoading,
+  } = useFavorites();
   const { isPlayed, addToPlayed, isLoading: playedLoading } = usePlayedGames();
   const toast = useToast();
 
@@ -173,12 +186,18 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
 
   const getESRBColor = (rating?: string) => {
     switch (rating?.toLowerCase()) {
-      case "everyone": return "green";
-      case "everyone 10+": return "blue";
-      case "teen": return "yellow";
-      case "mature 17+": return "orange";
-      case "adults only 18+": return "red";
-      default: return "gray";
+      case "everyone":
+        return "green";
+      case "everyone 10+":
+        return "blue";
+      case "teen":
+        return "yellow";
+      case "mature 17+":
+        return "orange";
+      case "adults only 18+":
+        return "red";
+      default:
+        return "gray";
     }
   };
 
@@ -192,10 +211,22 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
               {game.name}
             </Heading>
             <HStack spacing={2}>
-              <Tooltip label={isFavorite(game.id) ? "Remove from favorites" : "Add to favorites"}>
+              <Tooltip
+                label={
+                  isFavorite(game.id)
+                    ? "Remove from favorites"
+                    : "Add to favorites"
+                }
+              >
                 <IconButton
                   aria-label="Toggle favorite"
-                  icon={isFavorite(game.id) ? <FaHeart color="#E53E3E" /> : <FaHeart color="gray" />}
+                  icon={
+                    isFavorite(game.id) ? (
+                      <FaHeart color="#E53E3E" />
+                    ) : (
+                      <FaHeart color="gray" />
+                    )
+                  }
                   variant="ghost"
                   size="lg"
                   isLoading={favLoading}
@@ -205,7 +236,13 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
               <Tooltip label="Mark as played">
                 <IconButton
                   aria-label="Mark as played"
-                  icon={isPlayed(game.id) ? <FaCheck color="#38A169" /> : <FaPlay color="gray" />}
+                  icon={
+                    isPlayed(game.id) ? (
+                      <FaCheck color="#38A169" />
+                    ) : (
+                      <FaPlay color="gray" />
+                    )
+                  }
                   variant="ghost"
                   size="lg"
                   isLoading={playedLoading}
@@ -216,7 +253,7 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
-        
+
         <ModalBody pb={6}>
           {isLoading ? (
             <Flex justify="center" align="center" minH="400px">
@@ -236,7 +273,12 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
                   h="300px"
                   objectFit="cover"
                   fallback={
-                    <Flex align="center" justify="center" h="300px" bg="gray.100">
+                    <Flex
+                      align="center"
+                      justify="center"
+                      h="300px"
+                      bg="gray.100"
+                    >
                       <IoGameControllerOutline size={64} color="gray" />
                     </Flex>
                   }
@@ -254,12 +296,20 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
                       <HStack spacing={2}>
                         <CriticScore score={gameDetails.metacritic} />
                         {gameDetails.esrb_rating && (
-                          <Badge colorScheme={getESRBColor(gameDetails.esrb_rating.name)}>
+                          <Badge
+                            colorScheme={getESRBColor(
+                              gameDetails.esrb_rating.name
+                            )}
+                          >
                             {gameDetails.esrb_rating.name}
                           </Badge>
                         )}
                       </HStack>
-                      <PlatformIconList platforms={game.parent_platforms?.map(p => p.platform) || []} />
+                      <PlatformIconList
+                        platforms={
+                          game.parent_platforms?.map((p) => p.platform) || []
+                        }
+                      />
                     </VStack>
                     <VStack align="end" spacing={1}>
                       <HStack>
@@ -283,16 +333,21 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
                   <VStack spacing={6} align="stretch">
                     {/* Description */}
                     <Box>
-                      <Heading size="md" mb={3}>About</Heading>
+                      <Heading size="md" mb={3}>
+                        About
+                      </Heading>
                       <Text color={textColor} lineHeight="tall">
-                        {gameDetails.description_raw || "No description available."}
+                        {gameDetails.description_raw ||
+                          "No description available."}
                       </Text>
                     </Box>
 
                     {/* Screenshots */}
                     {screenshots.length > 0 && (
                       <Box>
-                        <Heading size="md" mb={3}>Screenshots</Heading>
+                        <Heading size="md" mb={3}>
+                          Screenshots
+                        </Heading>
                         {screenshotsLoading ? (
                           <Spinner />
                         ) : (
@@ -319,7 +374,9 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
                     {/* Tags */}
                     {gameDetails.tags && gameDetails.tags.length > 0 && (
                       <Box>
-                        <Heading size="md" mb={3}>Tags</Heading>
+                        <Heading size="md" mb={3}>
+                          Tags
+                        </Heading>
                         <Wrap>
                           {gameDetails.tags.slice(0, 15).map((tag) => (
                             <WrapItem key={tag.id}>
@@ -337,7 +394,12 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
                 {/* Right Column - Game Info */}
                 <GridItem>
                   <VStack spacing={4} align="stretch">
-                    <Box p={4} border="1px" borderColor={borderColor} borderRadius="lg">
+                    <Box
+                      p={4}
+                      border="1px"
+                      borderColor={borderColor}
+                      borderRadius="lg"
+                    >
                       <VStack spacing={3} align="stretch">
                         {/* Release Date */}
                         <HStack justify="space-between">
@@ -345,7 +407,9 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
                             <Icon as={FaCalendarAlt} color="gray.500" />
                             <Text fontWeight="semibold">Release Date:</Text>
                           </HStack>
-                          <Text color={textColor}>{formatDate(gameDetails.released)}</Text>
+                          <Text color={textColor}>
+                            {formatDate(gameDetails.released)}
+                          </Text>
                         </HStack>
 
                         <Divider />
@@ -357,68 +421,82 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
                             <Text fontWeight="semibold">Playtime:</Text>
                           </HStack>
                           <Text color={textColor}>
-                            {gameDetails.playtime ? `${gameDetails.playtime} hours` : "N/A"}
+                            {gameDetails.playtime
+                              ? `${gameDetails.playtime} hours`
+                              : "N/A"}
                           </Text>
                         </HStack>
 
                         <Divider />
 
                         {/* Genres */}
-                        {gameDetails.genres && gameDetails.genres.length > 0 && (
-                          <>
-                            <VStack align="stretch" spacing={2}>
-                              <Text fontWeight="semibold">Genres:</Text>
-                              <Wrap>
-                                {gameDetails.genres.map((genre) => (
-                                  <WrapItem key={genre.id}>
-                                    <Badge colorScheme="purple">{genre.name}</Badge>
-                                  </WrapItem>
-                                ))}
-                              </Wrap>
-                            </VStack>
-                            <Divider />
-                          </>
-                        )}
+                        {gameDetails.genres &&
+                          gameDetails.genres.length > 0 && (
+                            <>
+                              <VStack align="stretch" spacing={2}>
+                                <Text fontWeight="semibold">Genres:</Text>
+                                <Wrap>
+                                  {gameDetails.genres.map((genre) => (
+                                    <WrapItem key={genre.id}>
+                                      <Badge colorScheme="purple">
+                                        {genre.name}
+                                      </Badge>
+                                    </WrapItem>
+                                  ))}
+                                </Wrap>
+                              </VStack>
+                              <Divider />
+                            </>
+                          )}
 
                         {/* Platforms */}
-                        {gameDetails.platforms && gameDetails.platforms.length > 0 && (
-                          <>
-                            <VStack align="stretch" spacing={2}>
-                              <Text fontWeight="semibold">Platforms:</Text>
-                              <Wrap>
-                                {gameDetails.platforms.map((platform) => (
-                                  <WrapItem key={platform.platform.id}>
-                                    <Badge variant="outline">{platform.platform.name}</Badge>
-                                  </WrapItem>
-                                ))}
-                              </Wrap>
-                            </VStack>
-                            <Divider />
-                          </>
-                        )}
+                        {gameDetails.platforms &&
+                          gameDetails.platforms.length > 0 && (
+                            <>
+                              <VStack align="stretch" spacing={2}>
+                                <Text fontWeight="semibold">Platforms:</Text>
+                                <Wrap>
+                                  {gameDetails.platforms.map((platform) => (
+                                    <WrapItem key={platform.platform.id}>
+                                      <Badge variant="outline">
+                                        {platform.platform.name}
+                                      </Badge>
+                                    </WrapItem>
+                                  ))}
+                                </Wrap>
+                              </VStack>
+                              <Divider />
+                            </>
+                          )}
 
                         {/* Developers */}
-                        {gameDetails.developers && gameDetails.developers.length > 0 && (
-                          <>
-                            <VStack align="stretch" spacing={2}>
-                              <Text fontWeight="semibold">Developers:</Text>
-                              <Text color={textColor} fontSize="sm">
-                                {gameDetails.developers.map(dev => dev.name).join(", ")}
-                              </Text>
-                            </VStack>
-                            <Divider />
-                          </>
-                        )}
+                        {gameDetails.developers &&
+                          gameDetails.developers.length > 0 && (
+                            <>
+                              <VStack align="stretch" spacing={2}>
+                                <Text fontWeight="semibold">Developers:</Text>
+                                <Text color={textColor} fontSize="sm">
+                                  {gameDetails.developers
+                                    .map((dev) => dev.name)
+                                    .join(", ")}
+                                </Text>
+                              </VStack>
+                              <Divider />
+                            </>
+                          )}
 
                         {/* Publishers */}
-                        {gameDetails.publishers && gameDetails.publishers.length > 0 && (
-                          <VStack align="stretch" spacing={2}>
-                            <Text fontWeight="semibold">Publishers:</Text>
-                            <Text color={textColor} fontSize="sm">
-                              {gameDetails.publishers.map(pub => pub.name).join(", ")}
-                            </Text>
-                          </VStack>
-                        )}
+                        {gameDetails.publishers &&
+                          gameDetails.publishers.length > 0 && (
+                            <VStack align="stretch" spacing={2}>
+                              <Text fontWeight="semibold">Publishers:</Text>
+                              <Text color={textColor} fontSize="sm">
+                                {gameDetails.publishers
+                                  .map((pub) => pub.name)
+                                  .join(", ")}
+                              </Text>
+                            </VStack>
+                          )}
                       </VStack>
                     </Box>
 
@@ -473,7 +551,9 @@ const GameDetailsModal: React.FC<Props> = ({ game, isOpen, onClose }) => {
               <VStack spacing={4}>
                 <IoGameControllerOutline size={64} color="gray" />
                 <Text color={textColor}>Failed to load game details</Text>
-                <Button onClick={() => fetchGameDetails(game.id)}>Try Again</Button>
+                <Button onClick={() => fetchGameDetails(game.id)}>
+                  Try Again
+                </Button>
               </VStack>
             </Flex>
           )}

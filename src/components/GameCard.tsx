@@ -36,10 +36,10 @@ const GameCard = ({ game }: Props) => {
     isLoading: playedLoading,
   } = usePlayedGames();
   const { isOpen, onOpen, onClose } = useDisclosure(); // For auth modal
-  const { 
-    isOpen: isDetailsOpen, 
-    onOpen: onDetailsOpen, 
-    onClose: onDetailsClose 
+  const {
+    isOpen: isDetailsOpen,
+    onOpen: onDetailsOpen,
+    onClose: onDetailsClose,
   } = useDisclosure(); // For game details modal
   const toast = useToast();
 
@@ -224,7 +224,7 @@ const GameCard = ({ game }: Props) => {
           </HStack>
           <Heading fontSize="2xl">{game.name}</Heading>
         </Box>
-        
+
         {/* Click hint overlay on hover */}
         <Box
           position="absolute"
@@ -250,12 +250,12 @@ const GameCard = ({ game }: Props) => {
 
       {/* Auth Modal for non-authenticated users */}
       <AuthModal isOpen={isOpen} onClose={onClose} initialMode="login" />
-      
+
       {/* Game Details Modal */}
-      <GameDetailsModal 
-        game={game} 
-        isOpen={isDetailsOpen} 
-        onClose={onDetailsClose} 
+      <GameDetailsModal
+        game={game}
+        isOpen={isDetailsOpen}
+        onClose={onDetailsClose}
       />
     </>
   );

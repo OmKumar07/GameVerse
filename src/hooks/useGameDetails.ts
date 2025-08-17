@@ -23,7 +23,9 @@ interface GameDetails {
   metacritic_url?: string;
   tags: Array<{ id: number; name: string; games_count: number }>;
   screenshots_count: number;
-  parent_platforms: Array<{ platform: { id: number; name: string; slug: string } }>;
+  parent_platforms: Array<{
+    platform: { id: number; name: string; slug: string };
+  }>;
 }
 
 interface Screenshot {
