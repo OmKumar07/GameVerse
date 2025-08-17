@@ -257,6 +257,70 @@ router.delete("/favorites/:gameId", auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/users/played-games
+// @desc    Get user's played games
+// @access  Private
+router.get("/played-games", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User Not Found",
+        message: "User not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      playedGames: user.playedGames,
+    });
+  } catch (error) {
+    console.error("Get played games error:", error);
+    res.status(500).json({
+      error: "Played Games Fetch Failed",
+      message: "Unable to fetch played games",
+    });
+  }
+});
+
+// @route   DELETE /api/users/played-games/:gameId
+// @desc    Remove game from played games
+// @access  Private
+router.delete("/played-games/:gameId", auth, async (req, res) => {
+  try {
+    const { gameId } = req.params;
+
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User Not Found",
+        message: "User not found",
+      });
+    }
+
+    // Remove from played games
+    user.playedGames = user.playedGames.filter(
+      (game) => game.gameId !== parseInt(gameId)
+    );
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Game removed from played games",
+      playedGames: user.playedGames,
+    });
+  } catch (error) {
+    console.error("Remove played game error:", error);
+    res.status(500).json({
+      error: "Failed to Remove Played Game",
+      message: "Unable to remove game from played games",
+    });
+  }
+});
+
 // @route   POST /api/users/played-games
 // @desc    Add/update played game
 // @access  Private

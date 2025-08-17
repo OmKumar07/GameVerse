@@ -22,12 +22,14 @@ import {
   Image,
   IconButton,
   useToast,
+  Tooltip,
 } from "@chakra-ui/react";
-import { FiHeart, FiCalendar, FiEdit3, FiStar } from "react-icons/fi";
+import { FiHeart, FiCalendar, FiEdit3, FiStar, FiX } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaPlay, FaCheck } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import { useFavorites } from "../../hooks/useFavorites";
+import { usePlayedGames } from "../../hooks/usePlayedGames";
 import { useRecommendations } from "../../hooks/useRecommendations";
 import EditProfileModal from "./EditProfileModal";
 
@@ -40,6 +42,7 @@ const UserDashboard: React.FC = () => {
     isLoading,
     isFavorite,
   } = useFavorites();
+  const { playedGames, removeFromPlayed, addToPlayed, isPlayed, isLoading: playedLoading } = usePlayedGames();
   const { recommendations, isLoading: recommendationsLoading } =
     useRecommendations();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -87,6 +90,48 @@ const UserDashboard: React.FC = () => {
       toast({
         title: "Error",
         description: "Failed to add to favorites. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleRemoveFromPlayed = async (gameId: number, gameName: string) => {
+    try {
+      await removeFromPlayed(gameId);
+      toast({
+        title: "Removed from played games",
+        description: `${gameName} has been removed from your played games`,
+        status: "info",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to remove from played games. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleAddToPlayed = async (game: any) => {
+    try {
+      await addToPlayed(game);
+      toast({
+        title: "Marked as played",
+        description: `${game.name} has been marked as played`,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to mark as played. Please try again.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -280,7 +325,7 @@ const UserDashboard: React.FC = () => {
                     <StatLabel>Games Played</StatLabel>
                   </HStack>
                   <StatNumber color="blue.400">
-                    {user.totalGamesPlayed || 0}
+                    {playedGames.length}
                   </StatNumber>
                 </Stat>
               </CardBody>
@@ -366,31 +411,49 @@ const UserDashboard: React.FC = () => {
                         }}
                       >
                         <CardBody p={0}>
-                          {/* Add to favorites button */}
-                          <IconButton
-                            aria-label="Add to favorites"
-                            icon={
-                              isFavorite(game.id) ? (
-                                <FaHeart color="#E53E3E" />
-                              ) : (
-                                <FiHeart color="white" />
-                              )
-                            }
-                            position="absolute"
-                            top={2}
-                            right={2}
-                            zIndex={2}
-                            size="sm"
-                            bg="blackAlpha.600"
-                            _hover={{ bg: "blackAlpha.800" }}
-                            borderRadius="full"
-                            isLoading={isLoading}
-                            onClick={() =>
-                              isFavorite(game.id)
-                                ? handleRemoveFavorite(game.id, game.name)
-                                : handleAddToFavorites(game)
-                            }
-                          />
+                          <VStack position="absolute" top={2} right={2} spacing={1} zIndex={2}>
+                            <Tooltip label="Add to favorites" fontSize="sm">
+                              <IconButton
+                                aria-label="Add to favorites"
+                                icon={
+                                  isFavorite(game.id) ? (
+                                    <FaHeart color="#E53E3E" />
+                                  ) : (
+                                    <FiHeart color="white" />
+                                  )
+                                }
+                                size="sm"
+                                bg="blackAlpha.600"
+                                _hover={{ bg: "blackAlpha.800" }}
+                                borderRadius="full"
+                                isLoading={isLoading}
+                                onClick={() =>
+                                  isFavorite(game.id)
+                                    ? handleRemoveFavorite(game.id, game.name)
+                                    : handleAddToFavorites(game)
+                                }
+                              />
+                            </Tooltip>
+
+                            <Tooltip label="Mark as played" fontSize="sm">
+                              <IconButton
+                                aria-label="Mark as played"
+                                icon={
+                                  isPlayed(game.id) ? (
+                                    <FaCheck color="#38A169" />
+                                  ) : (
+                                    <FaPlay color="white" />
+                                  )
+                                }
+                                size="sm"
+                                bg="blackAlpha.600"
+                                _hover={{ bg: "blackAlpha.800" }}
+                                borderRadius="full"
+                                isLoading={playedLoading}
+                                onClick={() => handleAddToPlayed(game)}
+                              />
+                            </Tooltip>
+                          </VStack>
 
                           {/* Game Image */}
                           {game.background_image ? (
@@ -433,6 +496,89 @@ const UserDashboard: React.FC = () => {
                                 Score: {game.metacritic}
                               </Text>
                             )}
+                          </Box>
+                        </CardBody>
+                      </Card>
+                    ))}
+                  </SimpleGrid>
+                )}
+              </VStack>
+            </CardBody>
+          </Card>
+
+          {/* Played Games Section */}
+          <Card bg={cardBg} border="1px" borderColor={borderColor}>
+            <CardBody>
+              <VStack align="start" spacing={4}>
+                <HStack justify="space-between" w="100%">
+                  <Text fontSize="lg" fontWeight="semibold">
+                    Played Games
+                  </Text>
+                  {playedGames.length > 6 && (
+                    <Button size="sm" variant="ghost" colorScheme="blue">
+                      View All ({playedGames.length})
+                    </Button>
+                  )}
+                </HStack>
+                <Divider />
+                
+                {playedGames.length === 0 ? (
+                  <Box textAlign="center" py={8} w="100%">
+                    <IoGameControllerOutline size={48} color="gray.300" />
+                    <Text color="gray.500" fontSize="lg" mt={4}>
+                      No played games yet
+                    </Text>
+                    <Text color="gray.400" fontSize="sm">
+                      Mark games as played to track your completed games!
+                    </Text>
+                  </Box>
+                ) : (
+                  <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 6 }} spacing={4} w="100%">
+                    {playedGames.slice(0, 6).map((game) => (
+                      <Card key={game.id} bg={cardBg} border="1px" borderColor={borderColor} position="relative" _hover={{ transform: "scale(1.02)", transition: "transform 0.2s" }}>
+                        <CardBody p={0}>
+                          {/* Remove from played button */}
+                          <Tooltip label="Remove from played games" placement="top" hasArrow>
+                            <IconButton
+                              aria-label="Remove from played games"
+                              icon={<FiX color="#E53E3E" />}
+                              position="absolute"
+                              top={2}
+                              right={2}
+                              zIndex={2}
+                              size="sm"
+                              bg="blackAlpha.600"
+                              _hover={{ bg: "blackAlpha.800" }}
+                              borderRadius="full"
+                              isLoading={playedLoading}
+                              onClick={() => handleRemoveFromPlayed(game.id, game.name)}
+                            />
+                          </Tooltip>
+                          
+                          {/* Game Image */}
+                          {game.background_image ? (
+                            <Image
+                              src={game.background_image}
+                              alt={game.name}
+                              height="120px"
+                              objectFit="cover"
+                              width="100%"
+                              borderTopRadius="md"
+                            />
+                          ) : (
+                            <Box height="120px" bg="gray.700" borderTopRadius="md" display="flex" alignItems="center" justifyContent="center">
+                              <IoGameControllerOutline size={32} color="gray.400" />
+                            </Box>
+                          )}
+                          
+                          {/* Game Info */}
+                          <Box p={3}>
+                            <Text fontSize="sm" fontWeight="medium" noOfLines={2} title={game.name}>
+                              {game.name}
+                            </Text>
+                            <Text fontSize="xs" color="green.500" mt={1}>
+                              Status: {game.status === "completed" ? "Played" : game.status || "Played"}
+                            </Text>
                           </Box>
                         </CardBody>
                       </Card>

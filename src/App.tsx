@@ -7,6 +7,7 @@ import { Platform } from "./hooks/useGames";
 import { Genre } from "./hooks/useGenres";
 import { AuthProvider } from "./hooks/useAuth";
 import { FavoritesProvider } from "./hooks/useFavorites";
+import { PlayedGamesProvider } from "./hooks/usePlayedGames";
 import DashboardPage from "./pages/DashboardPage";
 
 function App() {
@@ -53,10 +54,12 @@ function App() {
     return (
       <AuthProvider>
         <FavoritesProvider>
-          <Box minH="100vh" bg={bgColor}>
-            <NavBar onSearch={setSearchText} />
-            <DashboardPage />
-          </Box>
+          <PlayedGamesProvider>
+            <Box minH="100vh" bg={bgColor}>
+              <NavBar onSearch={setSearchText} />
+              <DashboardPage />
+            </Box>
+          </PlayedGamesProvider>
         </FavoritesProvider>
       </AuthProvider>
     );
@@ -65,56 +68,58 @@ function App() {
   return (
     <AuthProvider>
       <FavoritesProvider>
-        <Box minH="100vh" bg={bgColor}>
-          <Grid
-            templateAreas={{
-              base: `"nav" "main"`,
-              lg: `"nav nav" "aside main"`,
-            }}
-            templateColumns={{
-              base: "1fr",
-              lg: "280px 1fr",
-            }}
-            templateRows={{
-              base: "auto 1fr",
-              lg: "auto 1fr",
-            }}
-          >
-            <GridItem area="nav">
-              <NavBar onSearch={setSearchText} />
-            </GridItem>
-
-            <GridItem
-              area="aside"
-              display={{ base: "none", lg: "block" }}
-              bg={sidebarBg}
-              borderRight="1px"
-              borderColor={useColorModeValue("gray.200", "gray.700")}
-              overflowY="auto"
-              maxH="calc(100vh - 82px)"
-              position="sticky"
-              top="82px"
+        <PlayedGamesProvider>
+          <Box minH="100vh" bg={bgColor}>
+            <Grid
+              templateAreas={{
+                base: `"nav" "main"`,
+                lg: `"nav nav" "aside main"`,
+              }}
+              templateColumns={{
+                base: "1fr",
+                lg: "280px 1fr",
+              }}
+              templateRows={{
+                base: "auto 1fr",
+                lg: "auto 1fr",
+              }}
             >
-              <Box p={6}>
-                <GenreList
-                  selectedGenre={selectedGenre}
-                  onSelectGenre={(genre) => setSelectedGenre(genre)}
-                />
-              </Box>
-            </GridItem>
+              <GridItem area="nav">
+                <NavBar onSearch={setSearchText} />
+              </GridItem>
 
-            <GridItem area="main">
-              <GameGrid
-                selectedGenre={selectedGenre}
-                selectedPlatform={selectedPlatform}
-                searchText={searchText}
-                sortOrder={sortOrder}
-                onSelectPlatform={setSelectedPlatform}
-                onSortSelect={setSortOrder}
-              />
-            </GridItem>
-          </Grid>
-        </Box>
+              <GridItem
+                area="aside"
+                display={{ base: "none", lg: "block" }}
+                bg={sidebarBg}
+                borderRight="1px"
+                borderColor={useColorModeValue("gray.200", "gray.700")}
+                overflowY="auto"
+                maxH="calc(100vh - 82px)"
+                position="sticky"
+                top="82px"
+              >
+                <Box p={6}>
+                  <GenreList
+                    selectedGenre={selectedGenre}
+                    onSelectGenre={(genre) => setSelectedGenre(genre)}
+                  />
+                </Box>
+              </GridItem>
+
+              <GridItem area="main">
+                <GameGrid
+                  selectedGenre={selectedGenre}
+                  selectedPlatform={selectedPlatform}
+                  searchText={searchText}
+                  sortOrder={sortOrder}
+                  onSelectPlatform={setSelectedPlatform}
+                  onSortSelect={setSortOrder}
+                />
+              </GridItem>
+            </Grid>
+          </Box>
+        </PlayedGamesProvider>
       </FavoritesProvider>
     </AuthProvider>
   );

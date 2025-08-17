@@ -4,16 +4,19 @@ import {
   Image,
   Heading,
   HStack,
+  VStack,
   IconButton,
   useDisclosure,
   useToast,
+  Tooltip,
 } from "@chakra-ui/react";
 import React from "react";
 import PlatformIconList from "./PlatformIconList";
 import CriticScore from "./CriticScore";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaPlay, FaCheck } from "react-icons/fa";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
+import { usePlayedGames } from "@/hooks/usePlayedGames";
 import AuthModal from "./auth/AuthModal";
 
 interface Props {
@@ -24,6 +27,8 @@ const GameCard = ({ game }: Props) => {
   const { isAuthenticated } = useAuth();
   const { isFavorite, addToFavorites, removeFromFavorites, isLoading } =
     useFavorites();
+  const { isPlayed, addToPlayed, removeFromPlayed, isLoading: playedLoading } =
+    usePlayedGames();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -66,6 +71,45 @@ const GameCard = ({ game }: Props) => {
     }
   };
 
+  const handlePlayedClick = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling
+
+    if (!isAuthenticated) {
+      onOpen(); // Open auth modal
+      return;
+    }
+
+    try {
+      if (isPlayed(game.id)) {
+        await removeFromPlayed(game.id);
+        toast({
+          title: "Removed from played games",
+          description: `${game.name} has been removed from your played games`,
+          status: "info",
+          duration: 2000,
+          isClosable: true,
+        });
+      } else {
+        await addToPlayed(game, "completed");
+        toast({
+          title: "Marked as played",
+          description: `${game.name} has been marked as played`,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update played games. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <>
       <Box
@@ -78,29 +122,58 @@ const GameCard = ({ game }: Props) => {
           transition: "transform .15s ease-in",
         }}
       >
-        {/* Favorite Heart Icon */}
-        <IconButton
-          aria-label={
-            isFavorite(game.id) ? "Remove from favorites" : "Add to favorites"
-          }
-          icon={
-            isFavorite(game.id) ? (
-              <FaHeart color="#E53E3E" />
-            ) : (
-              <FaRegHeart color="white" />
-            )
-          }
-          position="absolute"
-          top={3}
-          right={3}
-          zIndex={2}
-          size="sm"
-          bg="blackAlpha.600"
-          _hover={{ bg: "blackAlpha.800" }}
-          borderRadius="full"
-          isLoading={isLoading}
-          onClick={handleFavoriteClick}
-        />
+        {/* Action Icons */}
+        <VStack position="absolute" top={3} right={3} zIndex={2} spacing={2}>
+          {/* Favorite Heart Icon */}
+          <Tooltip
+            label={isFavorite(game.id) ? "Remove from favorites" : "Add to favorites"}
+            placement="top"
+            hasArrow
+          >
+            <IconButton
+              aria-label={
+                isFavorite(game.id) ? "Remove from favorites" : "Add to favorites"
+              }
+              icon={
+                isFavorite(game.id) ? (
+                  <FaHeart color="#E53E3E" />
+                ) : (
+                  <FaRegHeart color="white" />
+                )
+              }
+              size="sm"
+              bg="blackAlpha.600"
+              _hover={{ bg: "blackAlpha.800" }}
+              borderRadius="full"
+              isLoading={isLoading}
+              onClick={handleFavoriteClick}
+            />
+          </Tooltip>
+
+          {/* Played Game Icon */}
+          <Tooltip
+            label={isPlayed(game.id) ? "Remove from played games" : "Mark as played"}
+            placement="top"
+            hasArrow
+          >
+            <IconButton
+              aria-label={isPlayed(game.id) ? "Remove from played games" : "Mark as played"}
+              icon={
+                isPlayed(game.id) ? (
+                  <FaCheck color="#38A169" />
+                ) : (
+                  <FaPlay color="white" />
+                )
+              }
+              size="sm"
+              bg="blackAlpha.600"
+              _hover={{ bg: "blackAlpha.800" }}
+              borderRadius="full"
+              isLoading={playedLoading}
+              onClick={handlePlayedClick}
+            />
+          </Tooltip>
+        </VStack>
 
         {game.background_image ? (
           <Image
