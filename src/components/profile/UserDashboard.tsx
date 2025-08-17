@@ -33,6 +33,7 @@ import {
   FiX,
   FiPlus,
   FiList,
+  FiUsers,
 } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { FaHeart, FaPlay, FaCheck } from "react-icons/fa";
@@ -45,6 +46,8 @@ import EditProfileModal from "./EditProfileModal";
 import CreateListModal from "../lists/CreateListModal";
 import ListCard from "../lists/ListCard";
 import PrivacySettingsCard from "./PrivacySettingsCard";
+import { useFollowLists } from "../../hooks/useFollow";
+import FollowListsCard from "./FollowListsCard";
 
 const UserDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -63,6 +66,7 @@ const UserDashboard: React.FC = () => {
     isLoading: playedLoading,
   } = usePlayedGames();
   const { lists } = useCustomLists();
+  const { followersCount, followingCount } = useFollowLists();
   const { recommendations, isLoading: recommendationsLoading } =
     useRecommendations();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -329,7 +333,7 @@ const UserDashboard: React.FC = () => {
           </Card>
 
           {/* Stats Grid */}
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 6 }} spacing={6}>
             <Card bg={cardBg} border="1px" borderColor={borderColor}>
               <CardBody>
                 <Stat>
@@ -382,7 +386,34 @@ const UserDashboard: React.FC = () => {
                 </Stat>
               </CardBody>
             </Card>
+
+            <Card bg={cardBg} border="1px" borderColor={borderColor}>
+              <CardBody>
+                <Stat>
+                  <HStack>
+                    <FiUsers color="teal.400" size={20} />
+                    <StatLabel>Followers</StatLabel>
+                  </HStack>
+                  <StatNumber color="teal.400">{followersCount}</StatNumber>
+                </Stat>
+              </CardBody>
+            </Card>
+
+            <Card bg={cardBg} border="1px" borderColor={borderColor}>
+              <CardBody>
+                <Stat>
+                  <HStack>
+                    <FiUsers color="orange.400" size={20} />
+                    <StatLabel>Following</StatLabel>
+                  </HStack>
+                  <StatNumber color="orange.400">{followingCount}</StatNumber>
+                </Stat>
+              </CardBody>
+            </Card>
           </SimpleGrid>
+
+          {/* Follow Lists Section */}
+          <FollowListsCard />
 
           {/* Recommended Games Section */}
           <Card bg={cardBg} border="1px" borderColor={borderColor}>
@@ -842,6 +873,9 @@ const UserDashboard: React.FC = () => {
 
           {/* Privacy Settings */}
           <PrivacySettingsCard />
+
+          {/* Follow Lists */}
+          <FollowListsCard />
         </VStack>
 
         {/* Edit Profile Modal */}
