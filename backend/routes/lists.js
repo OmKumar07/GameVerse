@@ -7,7 +7,7 @@ const router = express.Router();
 // Get all custom lists for the authenticated user
 router.get("/", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("customLists");
+    const user = await User.findById(req.user.userId).select("customLists");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -31,7 +31,7 @@ router.get("/", auth, async (req, res) => {
 // Get a specific custom list
 router.get("/:listId", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("customLists");
+    const user = await User.findById(req.user.userId).select("customLists");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -75,7 +75,7 @@ router.post("/", auth, async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -133,7 +133,7 @@ router.patch("/:listId", auth, async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -170,7 +170,9 @@ router.patch("/:listId", auth, async (req, res) => {
     });
 
     // Get updated list
-    const updatedUser = await User.findById(req.user.id).select("customLists");
+    const updatedUser = await User.findById(req.user.userId).select(
+      "customLists"
+    );
     const updatedList = updatedUser.customLists.find(
       (list) => list.id === listId
     );
@@ -193,7 +195,7 @@ router.patch("/:listId", auth, async (req, res) => {
 router.delete("/:listId", auth, async (req, res) => {
   try {
     const listId = req.params.listId;
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -236,7 +238,7 @@ router.post("/:listId/games", auth, async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -249,7 +251,9 @@ router.post("/:listId/games", auth, async (req, res) => {
     });
 
     // Get updated list
-    const updatedUser = await User.findById(req.user.id).select("customLists");
+    const updatedUser = await User.findById(req.user.userId).select(
+      "customLists"
+    );
     const updatedList = updatedUser.customLists.find(
       (list) => list.id === listId
     );
@@ -274,7 +278,7 @@ router.delete("/:listId/games/:gameId", auth, async (req, res) => {
     const listId = req.params.listId;
     const gameId = parseInt(req.params.gameId);
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -283,7 +287,9 @@ router.delete("/:listId/games/:gameId", auth, async (req, res) => {
     await user.removeGameFromList(listId, gameId);
 
     // Get updated list
-    const updatedUser = await User.findById(req.user.id).select("customLists");
+    const updatedUser = await User.findById(req.user.userId).select(
+      "customLists"
+    );
     const updatedList = updatedUser.customLists.find(
       (list) => list.id === listId
     );
