@@ -19,15 +19,22 @@ import {
   Badge,
   Wrap,
   WrapItem,
+  Image,
+  IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import { FiHeart, FiCalendar, FiEdit3 } from "react-icons/fi";
 import { IoGameControllerOutline } from "react-icons/io5";
+import { FaHeart } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
+import { useFavorites } from "../../hooks/useFavorites";
 import EditProfileModal from "./EditProfileModal";
 
 const UserDashboard: React.FC = () => {
   const { user } = useAuth();
+  const { favorites, removeFromFavorites, isLoading } = useFavorites();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const toast = useToast();
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -35,6 +42,27 @@ const UserDashboard: React.FC = () => {
   if (!user) {
     return null;
   }
+
+  const handleRemoveFavorite = async (gameId: number, gameName: string) => {
+    try {
+      await removeFromFavorites(gameId);
+      toast({
+        title: "Removed from favorites",
+        description: `${gameName} has been removed from your favorites`,
+        status: "info",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to remove from favorites. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   const memberSince = new Date(user.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
@@ -209,9 +237,7 @@ const UserDashboard: React.FC = () => {
                     <FiHeart color="red.400" size={20} />
                     <StatLabel>Favorite Games</StatLabel>
                   </HStack>
-                  <StatNumber color="red.400">
-                    {user.favoriteGames?.length || 0}
-                  </StatNumber>
+                  <StatNumber color="red.400">{favorites.length}</StatNumber>
                 </Stat>
               </CardBody>
             </Card>
@@ -277,20 +303,103 @@ const UserDashboard: React.FC = () => {
                   <Text fontSize="lg" fontWeight="semibold">
                     Favorite Games
                   </Text>
-                  <Button size="sm" variant="ghost" colorScheme="purple">
-                    View All
-                  </Button>
+                  {favorites.length > 6 && (
+                    <Button size="sm" variant="ghost" colorScheme="purple">
+                      View All ({favorites.length})
+                    </Button>
+                  )}
                 </HStack>
                 <Divider />
-                <Box textAlign="center" py={8}>
-                  <FiHeart size={48} color="gray.300" />
-                  <Text color="gray.500" fontSize="lg" mt={4}>
-                    No favorite games yet
-                  </Text>
-                  <Text color="gray.400" fontSize="sm">
-                    Heart games you love to add them to your favorites!
-                  </Text>
-                </Box>
+
+                {favorites.length === 0 ? (
+                  <Box textAlign="center" py={8} w="100%">
+                    <FiHeart size={48} color="gray.300" />
+                    <Text color="gray.500" fontSize="lg" mt={4}>
+                      No favorite games yet
+                    </Text>
+                    <Text color="gray.400" fontSize="sm">
+                      Heart games you love to add them to your favorites!
+                    </Text>
+                  </Box>
+                ) : (
+                  <SimpleGrid
+                    columns={{ base: 1, sm: 2, md: 3, lg: 6 }}
+                    spacing={4}
+                    w="100%"
+                  >
+                    {favorites.slice(0, 6).map((game) => (
+                      <Card
+                        key={game.id}
+                        bg={cardBg}
+                        border="1px"
+                        borderColor={borderColor}
+                        position="relative"
+                        _hover={{
+                          transform: "scale(1.02)",
+                          transition: "transform 0.2s",
+                        }}
+                      >
+                        <CardBody p={0}>
+                          {/* Remove from favorites button */}
+                          <IconButton
+                            aria-label="Remove from favorites"
+                            icon={<FaHeart color="#E53E3E" />}
+                            position="absolute"
+                            top={2}
+                            right={2}
+                            zIndex={2}
+                            size="sm"
+                            bg="blackAlpha.600"
+                            _hover={{ bg: "blackAlpha.800" }}
+                            borderRadius="full"
+                            isLoading={isLoading}
+                            onClick={() =>
+                              handleRemoveFavorite(game.id, game.name)
+                            }
+                          />
+
+                          {/* Game Image */}
+                          {game.background_image ? (
+                            <Image
+                              src={game.background_image}
+                              alt={game.name}
+                              height="120px"
+                              objectFit="cover"
+                              width="100%"
+                              borderTopRadius="md"
+                            />
+                          ) : (
+                            <Box
+                              height="120px"
+                              bg="gray.700"
+                              borderTopRadius="md"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                            >
+                              <IoGameControllerOutline
+                                size={32}
+                                color="gray.400"
+                              />
+                            </Box>
+                          )}
+
+                          {/* Game Info */}
+                          <Box p={3}>
+                            <Text
+                              fontSize="sm"
+                              fontWeight="medium"
+                              noOfLines={2}
+                              title={game.name}
+                            >
+                              {game.name}
+                            </Text>
+                          </Box>
+                        </CardBody>
+                      </Card>
+                    ))}
+                  </SimpleGrid>
+                )}
               </VStack>
             </CardBody>
           </Card>

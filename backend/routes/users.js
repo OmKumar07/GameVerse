@@ -144,17 +144,53 @@ router.post(
   }
 );
 
+// @route   GET /api/users/favorites
+// @desc    Get user's favorite games
+// @access  Private
+router.get("/favorites", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User Not Found",
+        message: "User not found",
+      });
+    }
+
+    // Convert favoriteGames to frontend format
+    const favorites = user.favoriteGames.map((fav) => ({
+      id: fav.gameId,
+      name: fav.gameName,
+      background_image: fav.gameImage,
+      parent_platforms: [], // Will be empty for favorites
+      metacritic: null, // Will be null for favorites
+    }));
+
+    res.json({
+      success: true,
+      favorites,
+    });
+  } catch (error) {
+    console.error("Get favorites error:", error);
+    res.status(500).json({
+      error: "Favorites Fetch Failed",
+      message: "Unable to fetch favorite games",
+    });
+  }
+});
+
 // @route   POST /api/users/favorites
 // @desc    Add game to favorites
 // @access  Private
 router.post("/favorites", auth, async (req, res) => {
   try {
-    const { gameId, gameName, gameImage } = req.body;
+    const { game } = req.body;
 
-    if (!gameId || !gameName) {
+    if (!game || !game.id || !game.name) {
       return res.status(400).json({
         error: "Missing Data",
-        message: "Game ID and name are required",
+        message: "Game data with ID and name are required",
       });
     }
 
@@ -167,7 +203,13 @@ router.post("/favorites", auth, async (req, res) => {
       });
     }
 
-    await user.addToFavorites({ gameId, gameName, gameImage });
+    const gameData = {
+      gameId: game.id,
+      gameName: game.name,
+      gameImage: game.background_image || "",
+    };
+
+    await user.addToFavorites(gameData);
 
     res.json({
       success: true,
