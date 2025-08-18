@@ -19,17 +19,27 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { BsGrid3X3Gap } from "react-icons/bs";
 import logo from "../assets/logo.webp";
 import ColorModeSwitch from "./ui/ColorModeSwitch";
 import SearchInput from "./SearchInput";
 import ProfileMenu from "./profile/ProfileMenu";
+import GenreList from "./GenreList";
+import { Genre } from "@/hooks/useGenres";
 
 interface Props {
   onSearch: (searchText: string) => void;
+  selectedGenre?: Genre;
+  onSelectGenre: (genre: Genre) => void;
 }
 
-const NavBar = ({ onSearch }: Props) => {
+const NavBar = ({ onSearch, selectedGenre, onSelectGenre }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isGenresOpen,
+    onOpen: onGenresOpen,
+    onClose: onGenresClose,
+  } = useDisclosure();
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const shadowColor = useColorModeValue("md", "dark-lg");
@@ -148,6 +158,19 @@ const NavBar = ({ onSearch }: Props) => {
             display={{ base: "flex", lg: "none" }}
             minW="fit-content"
           >
+            <IconButton
+              aria-label={`Open genres menu${
+                selectedGenre ? ` (${selectedGenre.name} selected)` : ""
+              }`}
+              icon={<BsGrid3X3Gap />}
+              variant="ghost"
+              size="sm"
+              onClick={onGenresOpen}
+              color={selectedGenre ? "purple.500" : undefined}
+              _hover={{
+                bg: useColorModeValue("purple.50", "purple.900"),
+              }}
+            />
             <ColorModeSwitch />
             <ProfileMenu />
             <IconButton
@@ -205,6 +228,28 @@ const NavBar = ({ onSearch }: Props) => {
                 📊 Dashboard
               </Button>
             </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Mobile Genres Drawer */}
+      <Drawer isOpen={isGenresOpen} placement="left" onClose={onGenresClose}>
+        <DrawerOverlay />
+        <DrawerContent bg={mobileMenuBg}>
+          <DrawerCloseButton />
+          <DrawerHeader borderBottomWidth="1px">
+            <Text fontWeight="bold">Genres</Text>
+          </DrawerHeader>
+          <DrawerBody p={0}>
+            <Box p={4}>
+              <GenreList
+                selectedGenre={selectedGenre}
+                onSelectGenre={(genre) => {
+                  onSelectGenre(genre);
+                  onGenresClose();
+                }}
+              />
+            </Box>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

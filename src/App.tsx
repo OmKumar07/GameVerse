@@ -63,7 +63,11 @@ function App() {
         <FavoritesProvider>
           <PlayedGamesProvider>
             <Box minH="100vh" bg={bgColor}>
-              <NavBar onSearch={setSearchText} />
+              <NavBar
+                onSearch={setSearchText}
+                selectedGenre={selectedGenre}
+                onSelectGenre={setSelectedGenre}
+              />
               <DashboardPage />
             </Box>
           </PlayedGamesProvider>
@@ -79,7 +83,11 @@ function App() {
         <FavoritesProvider>
           <PlayedGamesProvider>
             <Box minH="100vh" bg={bgColor}>
-              <NavBar onSearch={setSearchText} />
+              <NavBar
+                onSearch={setSearchText}
+                selectedGenre={selectedGenre}
+                onSelectGenre={setSelectedGenre}
+              />
               <UserSearchPage />
             </Box>
           </PlayedGamesProvider>
@@ -95,7 +103,11 @@ function App() {
         <FavoritesProvider>
           <PlayedGamesProvider>
             <Box minH="100vh" bg={bgColor}>
-              <NavBar onSearch={setSearchText} />
+              <NavBar
+                onSearch={setSearchText}
+                selectedGenre={selectedGenre}
+                onSelectGenre={setSelectedGenre}
+              />
               <PublicProfilePage />
             </Box>
           </PlayedGamesProvider>
@@ -123,7 +135,11 @@ function App() {
               minH="100vh"
             >
               <GridItem area="nav">
-                <NavBar onSearch={setSearchText} />
+                <NavBar
+                  onSearch={setSearchText}
+                  selectedGenre={selectedGenre}
+                  onSelectGenre={setSelectedGenre}
+                />
               </GridItem>
 
               <GridItem
