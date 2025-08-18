@@ -128,8 +128,6 @@ router.get("/users/:identifier", async (req, res) => {
         achievementsUnlocked: publicProfile.achievementsUnlocked || 0,
         favoriteGamesCount: publicProfile.favoriteGames?.length || 0,
         customListsCount: publicProfile.customLists?.length || 0,
-        followersCount: publicProfile.followers?.length || 0,
-        followingCount: publicProfile.following?.length || 0,
       },
       memberSince: publicProfile.createdAt,
       lastActive: publicProfile.lastLoginAt,

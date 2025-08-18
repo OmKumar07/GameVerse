@@ -58,8 +58,6 @@ export interface PublicUserProfile extends PublicUser {
     achievementsUnlocked: number;
     favoriteGamesCount: number;
     customListsCount: number;
-    followersCount: number;
-    followingCount: number;
   };
   lastActive?: string;
 }
