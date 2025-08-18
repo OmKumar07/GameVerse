@@ -26,7 +26,6 @@ import {
 } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
 import { useUserSearch } from "../../hooks/useUserSearch";
-import FollowButton from "../profile/FollowButton";
 
 const UserSearchComponent = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -104,16 +103,11 @@ const UserSearchComponent = () => {
                 📍 {user.location}
               </Text>
             )}
-            <HStack spacing={4} fontSize="xs" color="gray.500" mb={1}>
-              <Text>👥 {user.stats?.followersCount || 0} followers</Text>
-              <Text>➡️ {user.stats?.followingCount || 0} following</Text>
-            </HStack>
             <Text fontSize="xs" color="gray.500">
               Member since {new Date(user.memberSince).toLocaleDateString()}
             </Text>
           </Box>
           <VStack spacing={2}>
-            <FollowButton userId={user._id} />
             <IconButton
               aria-label="View profile"
               icon={<ViewIcon />}

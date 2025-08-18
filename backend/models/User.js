@@ -189,20 +189,6 @@ const userSchema = new mongoose.Schema(
       default: 0,
     },
 
-    // Social Features
-    followers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    following: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-
     // Privacy Settings
     profilePrivacy: {
       type: String,
@@ -275,14 +261,6 @@ userSchema.index({ createdAt: -1 });
 userSchema.index({ "favoriteGames.gameId": 1 });
 
 // Virtual fields
-userSchema.virtual("followersCount").get(function () {
-  return this.followers.length;
-});
-
-userSchema.virtual("followingCount").get(function () {
-  return this.following.length;
-});
-
 userSchema.virtual("favoriteGamesCount").get(function () {
   return this.favoriteGames.length;
 });
@@ -442,21 +420,16 @@ userSchema.methods.getPublicProfile = function (viewerUserId = null) {
     };
   }
 
-  // For friends-only profiles, check if viewer is a friend (simplified for now)
-  if (publicProfile.profilePrivacy === "friends" && viewerUserId) {
-    const isFriend =
-      publicProfile.followers.includes(viewerUserId) ||
-      publicProfile.following.includes(viewerUserId);
-    if (!isFriend) {
-      return {
-        _id: publicProfile._id,
-        username: publicProfile.username,
-        displayName: publicProfile.displayName,
-        profileImage: publicProfile.profileImage,
-        profilePrivacy: publicProfile.profilePrivacy,
-        isFriendsOnly: true,
-      };
-    }
+  // For friends-only profiles, show basic info (simplified for now)
+  if (publicProfile.profilePrivacy === "friends") {
+    return {
+      _id: publicProfile._id,
+      username: publicProfile.username,
+      displayName: publicProfile.displayName,
+      profileImage: publicProfile.profileImage,
+      profilePrivacy: publicProfile.profilePrivacy,
+      isFriendsOnly: true,
+    };
   }
 
   // Apply privacy settings for public profiles

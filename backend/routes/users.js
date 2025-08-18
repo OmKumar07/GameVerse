@@ -9,9 +9,7 @@ const router = express.Router();
 // @access  Private
 router.get("/profile", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId)
-      .populate("followers", "username displayName profileImage")
-      .populate("following", "username displayName profileImage");
+    const user = await User.findById(req.user.userId);
 
     if (!user) {
       return res.status(404).json({
@@ -403,8 +401,6 @@ router.get("/stats", auth, async (req, res) => {
       totalGamesPlayed: user.totalGamesPlayed,
       totalHoursPlayed: user.totalHoursPlayed,
       favoriteGamesCount: user.favoriteGames.length,
-      followersCount: user.followers.length,
-      followingCount: user.following.length,
       memberSince: user.createdAt,
       lastActive: user.lastLoginAt,
       gamesByStatus: {
@@ -440,9 +436,7 @@ router.get("/:username", async (req, res) => {
   try {
     const { username } = req.params;
 
-    const user = await User.findOne({ username })
-      .populate("followers", "username displayName profileImage")
-      .populate("following", "username displayName profileImage");
+    const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(404).json({
@@ -482,226 +476,6 @@ router.get("/:username", async (req, res) => {
   }
 });
 
-// @route   POST /api/users/:userId/follow
-// @desc    Follow a user
-// @access  Private
-router.post("/:userId/follow", auth, async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const currentUserId = req.user.userId;
 
-    // Check if trying to follow yourself
-    if (userId === currentUserId) {
-      return res.status(400).json({
-        error: "Invalid Action",
-        message: "You cannot follow yourself",
-      });
-    }
-
-    // Find both users
-    const userToFollow = await User.findById(userId);
-    const currentUser = await User.findById(currentUserId);
-
-    if (!userToFollow || !currentUser) {
-      return res.status(404).json({
-        error: "User Not Found",
-        message: "User not found",
-      });
-    }
-
-    // Check if already following
-    if (currentUser.following.includes(userId)) {
-      return res.status(400).json({
-        error: "Already Following",
-        message: "You are already following this user",
-      });
-    }
-
-    // Add to following/followers arrays
-    currentUser.following.push(userId);
-    userToFollow.followers.push(currentUserId);
-
-    await currentUser.save();
-    await userToFollow.save();
-
-    res.json({
-      success: true,
-      message: "Successfully followed user",
-      data: {
-        followersCount: userToFollow.followers.length,
-        followingCount: currentUser.following.length,
-        isFollowing: true,
-      },
-    });
-  } catch (error) {
-    console.error("Follow user error:", error);
-    res.status(500).json({
-      error: "Follow Failed",
-      message: "Unable to follow user",
-    });
-  }
-});
-
-// @route   DELETE /api/users/:userId/follow
-// @desc    Unfollow a user
-// @access  Private
-router.delete("/:userId/follow", auth, async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const currentUserId = req.user.userId;
-
-    // Find both users
-    const userToUnfollow = await User.findById(userId);
-    const currentUser = await User.findById(currentUserId);
-
-    if (!userToUnfollow || !currentUser) {
-      return res.status(404).json({
-        error: "User Not Found",
-        message: "User not found",
-      });
-    }
-
-    // Check if not following
-    if (!currentUser.following.includes(userId)) {
-      return res.status(400).json({
-        error: "Not Following",
-        message: "You are not following this user",
-      });
-    }
-
-    // Remove from following/followers arrays
-    currentUser.following = currentUser.following.filter(
-      (id) => id.toString() !== userId
-    );
-    userToUnfollow.followers = userToUnfollow.followers.filter(
-      (id) => id.toString() !== currentUserId
-    );
-
-    await currentUser.save();
-    await userToUnfollow.save();
-
-    res.json({
-      success: true,
-      message: "Successfully unfollowed user",
-      data: {
-        followersCount: userToUnfollow.followers.length,
-        followingCount: currentUser.following.length,
-        isFollowing: false,
-      },
-    });
-  } catch (error) {
-    console.error("Unfollow user error:", error);
-    res.status(500).json({
-      error: "Unfollow Failed",
-      message: "Unable to unfollow user",
-    });
-  }
-});
-
-// @route   GET /api/users/:userId/follow-status
-// @desc    Get follow status for a user
-// @access  Private
-router.get("/:userId/follow-status", auth, async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const currentUserId = req.user.userId;
-
-    // Find both users
-    const targetUser = await User.findById(userId);
-    const currentUser = await User.findById(currentUserId);
-
-    if (!targetUser || !currentUser) {
-      return res.status(404).json({
-        error: "User Not Found",
-        message: "User not found",
-      });
-    }
-
-    const isFollowing = currentUser.following.includes(userId);
-    const isFollower = targetUser.following.includes(currentUserId);
-
-    res.json({
-      success: true,
-      data: {
-        isFollowing,
-        isFollower,
-        followersCount: targetUser.followers.length,
-        followingCount: targetUser.following.length,
-      },
-    });
-  } catch (error) {
-    console.error("Get follow status error:", error);
-    res.status(500).json({
-      error: "Status Check Failed",
-      message: "Unable to check follow status",
-    });
-  }
-});
-
-// @route   GET /api/users/followers
-// @desc    Get user's followers list
-// @access  Private
-router.get("/followers", auth, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.userId).populate(
-      "followers",
-      "username displayName profileImage bio"
-    );
-
-    if (!user) {
-      return res.status(404).json({
-        error: "User Not Found",
-        message: "User not found",
-      });
-    }
-
-    res.json({
-      success: true,
-      data: {
-        followers: user.followers,
-        count: user.followers.length,
-      },
-    });
-  } catch (error) {
-    console.error("Get followers error:", error);
-    res.status(500).json({
-      error: "Followers Fetch Failed",
-      message: "Unable to fetch followers",
-    });
-  }
-});
-
-// @route   GET /api/users/following
-// @desc    Get user's following list
-// @access  Private
-router.get("/following", auth, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.userId).populate(
-      "following",
-      "username displayName profileImage bio"
-    );
-
-    if (!user) {
-      return res.status(404).json({
-        error: "User Not Found",
-        message: "User not found",
-      });
-    }
-
-    res.json({
-      success: true,
-      data: {
-        following: user.following,
-        count: user.following.length,
-      },
-    });
-  } catch (error) {
-    console.error("Get following error:", error);
-    res.status(500).json({
-      error: "Following Fetch Failed",
-      message: "Unable to fetch following list",
-    });
-  }
-});
 
 module.exports = router;

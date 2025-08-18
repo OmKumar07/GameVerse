@@ -314,16 +314,6 @@ const PublicProfilePage: React.FC<PublicProfilePageProps> = () => {
               </Stat>
 
               <Stat>
-                <StatLabel>Followers</StatLabel>
-                <StatNumber>{profile.stats.followersCount || 0}</StatNumber>
-              </Stat>
-
-              <Stat>
-                <StatLabel>Following</StatLabel>
-                <StatNumber>{profile.stats.followingCount || 0}</StatNumber>
-              </Stat>
-
-              <Stat>
                 <StatLabel>Achievements</StatLabel>
                 <StatNumber>
                   {profile.stats.achievementsUnlocked || 0}
