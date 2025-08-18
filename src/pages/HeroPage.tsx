@@ -332,6 +332,17 @@ const HeroPage = ({ onEnterApp }: HeroPageProps) => {
           </VStack>
         </Box>
       </Container>
+
+      {/* Footer */}
+      <Box py={6} textAlign="center">
+        <Text
+          fontSize="sm"
+          color={textColor}
+          fontWeight="medium"
+        >
+          Made with ❤️+☕ by om
+        </Text>
+      </Box>
     </Box>
   );
 };
