@@ -382,7 +382,6 @@ const UserDashboard: React.FC = () => {
                 </Stat>
               </CardBody>
             </Card>
-
           </SimpleGrid>
 
           {/* Recommended Games Section */}
