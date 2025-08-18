@@ -8,6 +8,7 @@ import { Genre } from "./hooks/useGenres";
 import { AuthProvider } from "./hooks/useAuth";
 import { FavoritesProvider } from "./hooks/useFavorites";
 import { PlayedGamesProvider } from "./hooks/usePlayedGames";
+import useKeepServerAlive from "./hooks/useKeepServerAlive";
 import DashboardPage from "./pages/DashboardPage";
 import UserSearchPage from "./pages/UserSearchPage";
 import PublicProfilePage from "./pages/PublicProfilePage";
@@ -19,6 +20,9 @@ function App() {
   const [searchText, setSearchText] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [currentRoute, setCurrentRoute] = useState(window.location.pathname);
+
+  // Keep server alive to prevent cold starts
+  useKeepServerAlive();
 
   // All useColorModeValue hooks must be called at the top level
   const bgColor = useColorModeValue("gray.50", "gray.900");

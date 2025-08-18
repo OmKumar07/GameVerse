@@ -86,13 +86,82 @@ app.use("/api/public", publicRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
+  // Check MongoDB connection status without making queries
+  const dbStatus = mongoose.connection.readyState;
+  const dbStatusText = {
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting",
+  };
+
   res.status(200).json({
     status: "OK",
     message: "GameVerse API is running",
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || "development",
+    uptime: process.uptime(),
+    database: {
+      status: dbStatusText[dbStatus] || "unknown",
+      connected: dbStatus === 1,
+    },
   });
 });
+
+// Keep-alive endpoint (for external ping services)
+app.get("/api/keep-alive", (req, res) => {
+  res.status(200).json({
+    status: "alive",
+    timestamp: new Date().toISOString(),
+    message: "Server is awake",
+  });
+});
+
+// Self-ping mechanism to prevent server from sleeping
+const keepServerAlive = () => {
+  const serverUrl = process.env.SERVER_URL || `http://localhost:${PORT}`;
+
+  // Only run in production to avoid unnecessary requests in development
+  if (process.env.NODE_ENV === "production" && process.env.SERVER_URL) {
+    setInterval(async () => {
+      try {
+        const https = require("https");
+        const http = require("http");
+        const url = require("url");
+
+        const parsedUrl = url.parse(`${serverUrl}/api/keep-alive`);
+        const options = {
+          hostname: parsedUrl.hostname,
+          port: parsedUrl.port,
+          path: parsedUrl.path,
+          method: "GET",
+          timeout: 5000,
+        };
+
+        const protocol = parsedUrl.protocol === "https:" ? https : http;
+
+        const req = protocol.request(options, (res) => {
+          console.log(`🏓 Keep-alive ping successful: ${res.statusCode}`);
+        });
+
+        req.on("error", (err) => {
+          console.log(`🔴 Keep-alive ping failed: ${err.message}`);
+        });
+
+        req.on("timeout", () => {
+          console.log("🔴 Keep-alive ping timeout");
+          req.destroy();
+        });
+
+        req.end();
+      } catch (error) {
+        console.log(`🔴 Keep-alive error: ${error.message}`);
+      }
+    }, 30 * 60 * 1000); // Ping every 30 minutes (most services sleep after 30-60 minutes)
+
+    console.log("🏓 Keep-alive mechanism started - pinging every 30 minutes");
+  }
+};
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -136,6 +205,9 @@ app.listen(PORT, () => {
     `📱 Frontend URL: ${process.env.FRONTEND_URL || "http://localhost:5173"}`
   );
   console.log(`🔗 API URL: http://localhost:${PORT}/api`);
+
+  // Start keep-alive mechanism
+  keepServerAlive();
 });
 
 module.exports = app;
