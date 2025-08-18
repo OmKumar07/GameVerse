@@ -53,7 +53,7 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
 
   return (
     <Box>
-      <Heading size="md" mb={6} color={headingColor} fontWeight="semibold">
+      <Heading size={{ base: "sm", md: "md" }} mb={{ base: 4, md: 6 }} color={headingColor} fontWeight="semibold">
         🎮 Genres
       </Heading>
 
@@ -62,7 +62,7 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
         <Button
           variant="ghost"
           justifyContent="flex-start"
-          p={3}
+          p={{ base: 2, md: 3 }}
           h="auto"
           borderRadius="lg"
           bg={!selectedGenre ? selectedBg : "transparent"}
@@ -72,20 +72,20 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
           fontWeight={!selectedGenre ? "semibold" : "medium"}
           transition="all 0.2s"
         >
-          <HStack spacing={3} w="full">
+          <HStack spacing={{ base: 2, md: 3 }} w="full">
             <Box
-              w="32px"
-              h="32px"
+              w={{ base: "28px", md: "32px" }}
+              h={{ base: "28px", md: "32px" }}
               borderRadius="md"
               bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
               display="flex"
               alignItems="center"
               justifyContent="center"
-              fontSize="16px"
+              fontSize={{ base: "14px", md: "16px" }}
             >
               🎯
             </Box>
-            <Text fontSize="sm" flex={1} textAlign="left">
+            <Text fontSize={{ base: "sm", md: "sm" }} flex={1} textAlign="left">
               All Games
             </Text>
           </HStack>
@@ -96,7 +96,7 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
             key={genre.id}
             variant="ghost"
             justifyContent="flex-start"
-            p={3}
+            p={{ base: 2, md: 3 }}
             h="auto"
             borderRadius="lg"
             bg={selectedGenre?.id === genre.id ? selectedBg : "transparent"}
@@ -108,27 +108,28 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
             fontWeight={selectedGenre?.id === genre.id ? "semibold" : "medium"}
             transition="all 0.2s"
           >
-            <HStack spacing={3} w="full">
+            <HStack spacing={{ base: 2, md: 3 }} w="full">
               <Image
-                boxSize="32px"
+                boxSize={{ base: "28px", md: "32px" }}
                 borderRadius="md"
                 objectFit="cover"
                 src={genre.image_background}
                 fallback={
                   <Box
-                    w="32px"
-                    h="32px"
+                    w={{ base: "28px", md: "32px" }}
+                    h={{ base: "28px", md: "32px" }}
                     borderRadius="md"
                     bg="gray.300"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
+                    fontSize={{ base: "12px", md: "14px" }}
                   >
                     🎮
                   </Box>
                 }
               />
-              <Text fontSize="sm" flex={1} textAlign="left" isTruncated>
+              <Text fontSize={{ base: "sm", md: "sm" }} flex={1} textAlign="left" isTruncated>
                 {genre.name}
               </Text>
             </HStack>

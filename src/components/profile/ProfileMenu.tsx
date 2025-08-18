@@ -13,8 +13,10 @@ import {
   VStack,
   useColorModeValue,
   useDisclosure,
+  IconButton,
+  Icon,
 } from "@chakra-ui/react";
-import { FiUser, FiSettings, FiLogOut, FiHeart } from "react-icons/fi";
+import { FiUser, FiSettings, FiLogOut, FiHeart, FiLogIn } from "react-icons/fi";
 import { useAuth } from "../../hooks/useAuth";
 import AuthModal from "../auth/AuthModal";
 
@@ -29,9 +31,11 @@ const ProfileMenu: React.FC = () => {
   if (!isAuthenticated || !user) {
     return (
       <>
-        <Button
+        <IconButton
+          aria-label="Sign In"
+          icon={<Icon as={FiLogIn} />}
           colorScheme="purple"
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={onOpen}
           _hover={{
@@ -39,9 +43,7 @@ const ProfileMenu: React.FC = () => {
             transform: "translateY(-1px)",
           }}
           transition="all 0.2s"
-        >
-          Sign In
-        </Button>
+        />
         <AuthModal isOpen={isOpen} onClose={onClose} initialMode="login" />
       </>
     );

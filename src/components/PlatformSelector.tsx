@@ -42,7 +42,7 @@ const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
   }
 
   if (isLoading)
-    return <Skeleton height="44px" width="200px" borderRadius="lg" />;
+    return <Skeleton height={{ base: "36px", md: "44px" }} width={{ base: "120px", sm: "140px", md: "180px" }} borderRadius="lg" />;
 
   const platforms =
     data?.results && Array.isArray(data.results) ? data.results : [];
@@ -59,11 +59,13 @@ const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
         _hover={{ bg: hoverColor }}
         _active={{ bg: hoverColor }}
         borderRadius="lg"
-        height="44px"
-        minW="200px"
+        height={{ base: "36px", sm: "40px", md: "44px" }}
+        minW={{ base: "100px", sm: "120px", md: "160px" }}
+        maxW={{ base: "140px", sm: "180px", md: "none" }}
         justifyContent="space-between"
         textAlign="left"
         fontWeight="normal"
+        fontSize={{ base: "xs", sm: "sm", md: "md" }}
       >
         <Text isTruncated>{selectedPlatform?.name || "All Platforms"}</Text>
       </MenuButton>

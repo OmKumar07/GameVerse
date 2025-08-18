@@ -38,11 +38,11 @@ const GameHeading = ({
   if (genreName) filters.push(genreName);
 
   return (
-    <Box mb={6}>
-      <HStack align="baseline" spacing={4} wrap="wrap">
+    <Box mb={{ base: 4, md: 6 }}>
+      <HStack align="baseline" spacing={4} wrap="wrap" mb={2}>
         <Heading
           as="h1"
-          fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+          fontSize={{ base: "xl", sm: "2xl", md: "3xl", lg: "4xl" }}
           fontWeight="bold"
           color={textColor}
           lineHeight="shorter"
@@ -57,8 +57,8 @@ const GameHeading = ({
                 key={index}
                 colorScheme={badgeColorScheme}
                 variant="subtle"
-                fontSize="sm"
-                px={3}
+                fontSize={{ base: "xs", md: "sm" }}
+                px={{ base: 2, md: 3 }}
                 py={1}
                 borderRadius="full"
               >
@@ -70,11 +70,21 @@ const GameHeading = ({
       </HStack>
 
       {filters.length > 0 ? (
-        <Text fontSize="lg" color="gray.500" mt={2} fontWeight="medium">
+        <Text
+          fontSize={{ base: "sm", md: "md" }}
+          color="gray.500"
+          mt={1}
+          fontWeight="medium"
+        >
           Filtered by {filters.join(" • ")} 🎮
         </Text>
       ) : (
-        <Text fontSize="lg" color="gray.500" mt={2} fontWeight="medium">
+        <Text
+          fontSize={{ base: "sm", md: "md" }}
+          color="gray.500"
+          mt={1}
+          fontWeight="medium"
+        >
           Explore the latest and greatest games 🎮
         </Text>
       )}

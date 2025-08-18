@@ -116,12 +116,11 @@ function App() {
               }}
               templateColumns={{
                 base: "1fr",
-                lg: "280px 1fr",
+                lg: "260px 1fr",
+                xl: "280px 1fr",
               }}
-              templateRows={{
-                base: "auto 1fr",
-                lg: "auto 1fr",
-              }}
+              templateRows="auto 1fr"
+              minH="100vh"
             >
               <GridItem area="nav">
                 <NavBar onSearch={setSearchText} />
@@ -134,11 +133,11 @@ function App() {
                 borderRight="1px"
                 borderColor={useColorModeValue("gray.200", "gray.700")}
                 overflowY="auto"
-                maxH="calc(100vh - 82px)"
+                maxH="calc(100vh - 56px)"
                 position="sticky"
-                top="82px"
+                top="56px"
               >
-                <Box p={6}>
+                <Box p={{ base: 3, md: 4, lg: 5 }}>
                   <GenreList
                     selectedGenre={selectedGenre}
                     onSelectGenre={(genre) => setSelectedGenre(genre)}

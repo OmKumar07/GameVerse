@@ -73,7 +73,11 @@ const GameGrid = ({
   // Show error fallback if there's an error
   if (error) {
     return (
-      <Box padding={{ base: "20px", md: "32px" }} maxW="1400px" mx="auto">
+      <Box
+        padding={{ base: "8px", sm: "12px", md: "16px", lg: "20px", xl: "24px" }}
+        maxW="1400px"
+        mx="auto"
+      >
         <ErrorFallback
           error={error.message || "Something went wrong"}
           onRetry={() => refetch()}
@@ -84,14 +88,24 @@ const GameGrid = ({
   }
 
   return (
-    <Box padding={{ base: "20px", md: "32px" }} maxW="1400px" mx="auto">
+    <Box
+      padding={{ base: "8px", sm: "12px", md: "16px", lg: "20px", xl: "24px" }}
+      maxW="1400px"
+      mx="auto"
+    >
       <GameHeading
         genreName={selectedGenre?.name}
         platformName={selectedPlatform?.name}
         isLoading={isLoading}
       />
 
-      <HStack gap={4} marginBottom={8} flexWrap="wrap" align="center">
+      <HStack
+        gap={{ base: 2, sm: 3, md: 4 }}
+        marginBottom={{ base: 4, md: 6 }}
+        flexWrap="wrap"
+        align="center"
+        justify={{ base: "center", sm: "flex-start" }}
+      >
         <PlatformSelector
           selectedPlatform={selectedPlatform}
           onSelectPlatform={onSelectPlatform}
@@ -99,7 +113,18 @@ const GameGrid = ({
         <SortSelector sortOrder={sortOrder} onSelectSortOrder={onSortSelect} />
       </HStack>
 
-      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} gap={6}>
+      <SimpleGrid
+        columns={{
+          base: 1, // 1 column on mobile (320px+)
+          sm: 2,   // 2 columns on small screens (480px+)
+          md: 2,   // 2 columns on medium screens (768px+)  
+          lg: 3,   // 3 columns on large screens (992px+)
+          xl: 4,   // 4 columns on extra large screens (1280px+)
+          "2xl": 5 // 5 columns on 2xl screens (1536px+)
+        }}
+        spacing={{ base: 3, sm: 4, md: 5, lg: 6 }}
+        w="100%"
+      >
         {isLoading &&
           skeletons.map((skeleton: number) => (
             <GameCardSkeleton key={skeleton} />

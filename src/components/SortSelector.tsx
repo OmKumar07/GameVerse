@@ -51,11 +51,13 @@ const SortSelector = ({ onSelectSortOrder, sortOrder }: Props) => {
         _hover={{ bg: hoverColor }}
         _active={{ bg: hoverColor }}
         borderRadius="lg"
-        height="44px"
-        minW="180px"
+        height={{ base: "36px", sm: "40px", md: "44px" }}
+        minW={{ base: "90px", sm: "110px", md: "140px" }}
+        maxW={{ base: "130px", sm: "160px", md: "none" }}
         justifyContent="space-between"
         textAlign="left"
         fontWeight="normal"
+        fontSize={{ base: "xs", sm: "sm", md: "md" }}
       >
         <Text isTruncated>
           {currentSortOrder.icon} {currentSortOrder.label}

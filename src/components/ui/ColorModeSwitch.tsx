@@ -1,44 +1,33 @@
 import {
-  HStack,
-  Switch,
-  Text,
+  IconButton,
   useColorMode,
   Icon,
-  Box,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { BsSun, BsMoon } from "react-icons/bs";
 
 const ColorModeSwitch = () => {
   const { toggleColorMode, colorMode } = useColorMode();
-  const textColor = useColorModeValue("gray.600", "gray.300");
 
   return (
-    <HStack spacing={3}>
-      <Icon
-        as={BsSun as any}
-        color={colorMode === "light" ? "orange.400" : "gray.400"}
-      />
-      <Switch
-        colorScheme="purple"
-        size="lg"
-        isChecked={colorMode === "dark"}
-        onChange={toggleColorMode}
-      />
-      <Icon
-        as={BsMoon as any}
-        color={colorMode === "dark" ? "blue.400" : "gray.400"}
-      />
-      <Text
-        whiteSpace="nowrap"
-        fontSize="sm"
-        fontWeight="medium"
-        color={textColor}
-        display={{ base: "none", md: "block" }}
-      >
-        {colorMode === "dark" ? "Dark" : "Light"}
-      </Text>
-    </HStack>
+    <IconButton
+      aria-label={`Switch to ${colorMode === "light" ? "dark" : "light"} mode`}
+      icon={
+        <Icon
+          as={colorMode === "light" ? BsMoon : BsSun}
+          boxSize={4}
+        />
+      }
+      variant="ghost"
+      size="sm"
+      onClick={toggleColorMode}
+      color={useColorModeValue("gray.600", "gray.300")}
+      _hover={{
+        bg: useColorModeValue("gray.100", "gray.700"),
+        transform: "scale(1.1)",
+      }}
+      transition="all 0.2s"
+    />
   );
 };
 

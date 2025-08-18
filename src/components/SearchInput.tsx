@@ -25,7 +25,7 @@ const SearchInput = ({ onSearch }: Props) => {
       <Box position="relative">
         <Input
           ref={ref}
-          borderRadius="xl"
+          borderRadius={{ base: "lg", md: "xl" }}
           placeholder="Search for games..."
           variant="filled"
           bg={bgColor}
@@ -37,19 +37,20 @@ const SearchInput = ({ onSearch }: Props) => {
           _hover={{
             bg: focusBgColor,
           }}
-          paddingLeft={12}
-          fontSize="md"
-          height="44px"
+          paddingLeft={{ base: 7, sm: 8, md: 10, lg: 12 }}
+          fontSize={{ base: "xs", sm: "sm", md: "md" }}
+          height={{ base: "32px", sm: "36px", md: "40px", lg: "44px" }}
           transition="all 0.2s"
         />
         <Icon
           as={BsSearch as any}
           color="gray.400"
           position="absolute"
-          left={4}
+          left={{ base: 2, sm: 2.5, md: 3, lg: 4 }}
           top="50%"
           transform="translateY(-50%)"
           zIndex={2}
+          boxSize={{ base: "10px", sm: "12px", md: "14px", lg: "16px" }}
         />
       </Box>
     </form>
