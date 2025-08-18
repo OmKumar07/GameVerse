@@ -1,6 +1,7 @@
 # 🎮 GameVerse
 
 **Your Ultimate Gaming Companion - Discover, Organize, and Track Your Favorite Games**
+- **🌐 Live Demo**: [GameVerse Live](https://game-verse7.netlify.app/)
 
 GameVerse is a modern, full-stack web application that provides a complete gaming experience. From discovering new games to managing your personal gaming library, GameVerse offers everything you need in one beautiful, responsive platform. Built with React, TypeScript, Node.js, and MongoDB, it combines powerful functionality with an intuitive user experience.
 
