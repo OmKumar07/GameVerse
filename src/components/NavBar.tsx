@@ -46,8 +46,14 @@ const NavBar = ({ onSearch, selectedGenre, onSelectGenre }: Props) => {
   const mobileMenuBg = useColorModeValue("white", "gray.800");
 
   const handleNavigateHome = () => {
-    // Navigate to homepage
+    // Navigate to homepage (hero page)
     window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
+  const handleNavigateGames = () => {
+    // Navigate to games app
+    window.history.pushState({}, "", "/app");
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
 
@@ -96,7 +102,7 @@ const NavBar = ({ onSearch, selectedGenre, onSelectGenre }: Props) => {
           <HStack
             spacing={{ base: 1.5, sm: 2, md: 3 }}
             cursor="pointer"
-            onClick={handleNavigateHome}
+            onClick={handleNavigateGames}
             _hover={{ opacity: 0.8 }}
             transition="opacity 0.2s"
             minW="fit-content"
@@ -139,6 +145,9 @@ const NavBar = ({ onSearch, selectedGenre, onSelectGenre }: Props) => {
           >
             <ButtonGroup size="sm" variant="ghost" spacing={1}>
               <Button onClick={handleNavigateHome} px={3}>
+                Home
+              </Button>
+              <Button onClick={handleNavigateGames} px={3}>
                 Games
               </Button>
               <Button onClick={handleNavigateUsers} px={3}>
@@ -203,7 +212,18 @@ const NavBar = ({ onSearch, selectedGenre, onSelectGenre }: Props) => {
                 }}
                 size="lg"
               >
-                🎮 Games
+                � Home
+              </Button>
+              <Button
+                variant="ghost"
+                justifyContent="flex-start"
+                onClick={() => {
+                  handleNavigateGames();
+                  onClose();
+                }}
+                size="lg"
+              >
+                �🎮 Games
               </Button>
               <Button
                 variant="ghost"
