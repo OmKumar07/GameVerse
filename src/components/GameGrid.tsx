@@ -74,7 +74,13 @@ const GameGrid = ({
   if (error) {
     return (
       <Box
-        padding={{ base: "8px", sm: "12px", md: "16px", lg: "20px", xl: "24px" }}
+        padding={{
+          base: "8px",
+          sm: "12px",
+          md: "16px",
+          lg: "20px",
+          xl: "24px",
+        }}
         maxW="1400px"
         mx="auto"
       >
@@ -116,11 +122,11 @@ const GameGrid = ({
       <SimpleGrid
         columns={{
           base: 1, // 1 column on mobile (320px+)
-          sm: 2,   // 2 columns on small screens (480px+)
-          md: 2,   // 2 columns on medium screens (768px+)  
-          lg: 3,   // 3 columns on large screens (992px+)
-          xl: 4,   // 4 columns on extra large screens (1280px+)
-          "2xl": 5 // 5 columns on 2xl screens (1536px+)
+          sm: 2, // 2 columns on small screens (480px+)
+          md: 2, // 2 columns on medium screens (768px+)
+          lg: 3, // 3 columns on large screens (992px+)
+          xl: 4, // 4 columns on extra large screens (1280px+)
+          "2xl": 5, // 5 columns on 2xl screens (1536px+)
         }}
         spacing={{ base: 3, sm: 4, md: 5, lg: 6 }}
         w="100%"

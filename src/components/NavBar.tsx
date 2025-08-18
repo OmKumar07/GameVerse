@@ -71,7 +71,12 @@ const NavBar = ({ onSearch }: Props) => {
       >
         {/* Desktop and Mobile Layout */}
         <Flex
-          padding={{ base: "6px 8px", sm: "8px 12px", md: "12px 16px", lg: "16px 24px" }}
+          padding={{
+            base: "6px 8px",
+            sm: "8px 12px",
+            md: "12px 16px",
+            lg: "16px 24px",
+          }}
           maxW="1400px"
           mx="auto"
           align="center"

@@ -270,7 +270,10 @@ const GameCard = ({ game }: Props) => {
             alignItems="center"
             justifyContent="center"
           >
-            <Text color={textColor} fontSize={{ base: "xs", sm: "sm", md: "md" }}>
+            <Text
+              color={textColor}
+              fontSize={{ base: "xs", sm: "sm", md: "md" }}
+            >
               No Image Available
             </Text>
           </Box>

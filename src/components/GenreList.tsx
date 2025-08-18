@@ -53,7 +53,12 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
 
   return (
     <Box>
-      <Heading size={{ base: "sm", md: "md" }} mb={{ base: 4, md: 6 }} color={headingColor} fontWeight="semibold">
+      <Heading
+        size={{ base: "sm", md: "md" }}
+        mb={{ base: 4, md: 6 }}
+        color={headingColor}
+        fontWeight="semibold"
+      >
         🎮 Genres
       </Heading>
 
@@ -129,7 +134,12 @@ const GenreList = ({ selectedGenre, onSelectGenre }: Props) => {
                   </Box>
                 }
               />
-              <Text fontSize={{ base: "sm", md: "sm" }} flex={1} textAlign="left" isTruncated>
+              <Text
+                fontSize={{ base: "sm", md: "sm" }}
+                flex={1}
+                textAlign="left"
+                isTruncated
+              >
                 {genre.name}
               </Text>
             </HStack>

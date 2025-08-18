@@ -42,7 +42,13 @@ const PlatformSelector = ({ onSelectPlatform, selectedPlatform }: Props) => {
   }
 
   if (isLoading)
-    return <Skeleton height={{ base: "36px", md: "44px" }} width={{ base: "120px", sm: "140px", md: "180px" }} borderRadius="lg" />;
+    return (
+      <Skeleton
+        height={{ base: "36px", md: "44px" }}
+        width={{ base: "120px", sm: "140px", md: "180px" }}
+        borderRadius="lg"
+      />
+    );
 
   const platforms =
     data?.results && Array.isArray(data.results) ? data.results : [];

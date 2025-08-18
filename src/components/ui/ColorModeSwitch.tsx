@@ -12,12 +12,7 @@ const ColorModeSwitch = () => {
   return (
     <IconButton
       aria-label={`Switch to ${colorMode === "light" ? "dark" : "light"} mode`}
-      icon={
-        <Icon
-          as={colorMode === "light" ? BsMoon : BsSun}
-          boxSize={4}
-        />
-      }
+      icon={<Icon as={colorMode === "light" ? BsMoon : BsSun} boxSize={4} />}
       variant="ghost"
       size="sm"
       onClick={toggleColorMode}
