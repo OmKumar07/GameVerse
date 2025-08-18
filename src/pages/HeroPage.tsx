@@ -335,11 +335,7 @@ const HeroPage = ({ onEnterApp }: HeroPageProps) => {
 
       {/* Footer */}
       <Box py={6} textAlign="center">
-        <Text
-          fontSize="sm"
-          color={textColor}
-          fontWeight="medium"
-        >
+        <Text fontSize="sm" color={textColor} fontWeight="medium">
           Made with ❤️+☕ by om
         </Text>
       </Box>
